@@ -1,4 +1,5 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
       "source": "/editor",
@@ -6,6 +7,10 @@
     },
     {
       "source": "/v/:slug",
+      "destination": "/api/view?slug=:slug"
+    },
+    {
+      "source": "/:slug((?!api$|editor$)[a-zA-Z0-9-]+)",
       "destination": "/api/view?slug=:slug"
     }
   ]

@@ -29,7 +29,7 @@ function createViewHandler(deps = {}) {
     }
 
     const slug = String(req.query?.slug || "").trim().toLowerCase();
-    if (!slug || slug.length < 2 || !SLUG_REGEX.test(slug)) {
+    if (!slug || !SLUG_REGEX.test(slug)) {
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       return res.status(400).send("<h1>400 - Đường dẫn không hợp lệ</h1>");
     }

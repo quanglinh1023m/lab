@@ -118,13 +118,17 @@ describe("api/save handler", () => {
     await handler({ method: "POST", body: { html_content: "<h1>Hi</h1>", edit_pin: "12a4" } }, badPinRes);
     assert.equal(badPinRes.statusCode, 400);
 
-    const reservedSlugRes = createMockRes();
-    await handler({ method: "POST", body: { slug: "api", html_content: "<h1>Hi</h1>", edit_pin: "1234" } }, reservedSlugRes);
-    assert.equal(reservedSlugRes.statusCode, 400);
+    const reservedApiRes = createMockRes();
+    await handler({ method: "POST", body: { slug: "api", html_content: "<h1>Hi</h1>", edit_pin: "1234" } }, reservedApiRes);
+    assert.equal(reservedApiRes.statusCode, 400);
 
-    const shortSlugRes = createMockRes();
-    await handler({ method: "POST", body: { slug: "a", html_content: "<h1>Hi</h1>", edit_pin: "1234" } }, shortSlugRes);
-    assert.equal(shortSlugRes.statusCode, 400);
+    const reservedEditorRes = createMockRes();
+    await handler({ method: "POST", body: { slug: "editor", html_content: "<h1>Hi</h1>", edit_pin: "1234" } }, reservedEditorRes);
+    assert.equal(reservedEditorRes.statusCode, 400);
+
+    const badCharSlugRes = createMockRes();
+    await handler({ method: "POST", body: { slug: "a b", html_content: "<h1>Hi</h1>", edit_pin: "1234" } }, badCharSlugRes);
+    assert.equal(badCharSlugRes.statusCode, 400);
   });
 
   it("rejects HTML payloads exceeding 2 MB with 413", async () => {
@@ -174,6 +178,32 @@ describe("api/save handler", () => {
     assert.equal(res.statusCode, 201);
     assert.deepEqual(res.body, { slug: "trangmoi2026", updated: false });
     assert.equal(mockDb.store.get("trangmoi2026").html_content, "<h1>No Hyphen</h1>");
+  });
+
+  it("allows 1-character slugs and 'index' slug", async () => {
+    const mockDb = createMockSupabase();
+    const save = saveHandler.createSaveHandler({ getSupabaseClient: () => mockDb });
+    const view = viewHandler.createViewHandler({ getSupabaseClient: () => mockDb });
+
+    const saveOneRes = createMockRes();
+    await save({ method: "POST", body: { slug: "1", html_content: "<h1>One</h1>", edit_pin: "1234" } }, saveOneRes);
+    assert.equal(saveOneRes.statusCode, 201);
+    assert.equal(saveOneRes.body.slug, "1");
+
+    const viewOneRes = createMockRes();
+    await view({ method: "GET", query: { slug: "1" } }, viewOneRes);
+    assert.equal(viewOneRes.statusCode, 200);
+    assert.equal(viewOneRes.body, "<h1>One</h1>");
+
+    const saveIndexRes = createMockRes();
+    await save({ method: "POST", body: { slug: "index", html_content: "<h1>Index Slug</h1>", edit_pin: "1234" } }, saveIndexRes);
+    assert.equal(saveIndexRes.statusCode, 201);
+    assert.equal(saveIndexRes.body.slug, "index");
+
+    const viewIndexRes = createMockRes();
+    await view({ method: "GET", query: { slug: "index" } }, viewIndexRes);
+    assert.equal(viewIndexRes.statusCode, 200);
+    assert.equal(viewIndexRes.body, "<h1>Index Slug</h1>");
   });
 
   it("auto-generates a valid slug when omitted", async () => {

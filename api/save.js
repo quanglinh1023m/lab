@@ -3,7 +3,7 @@ const { createClient } = require("@supabase/supabase-js");
 
 const MAX_HTML_BYTES = 2 * 1024 * 1024; // 2 MB safety cap below Vercel's 4.5 MB limit
 const DB_TIMEOUT_MS = 10000;
-const RESERVED_SLUGS = new Set(["api", "v", "index"]);
+const RESERVED_SLUGS = new Set(["api", "editor"]);
 const SLUG_REGEX = /^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$/;
 const PIN_REGEX = /^\d{4,6}$/;
 
@@ -79,9 +79,9 @@ function createSaveHandler(deps = {}) {
       }
 
       const slug = rawSlug || (mode === "create" ? generateSlug() : "");
-      if (!slug || slug.length < 2 || !SLUG_REGEX.test(slug) || RESERVED_SLUGS.has(slug)) {
+      if (!slug || !SLUG_REGEX.test(slug) || RESERVED_SLUGS.has(slug)) {
         return res.status(400).json({
-          error: "Tên đường dẫn (slug) chỉ được chứa chữ thường, số và dấu gạch ngang (2-64 ký tự).",
+          error: "Tên đường dẫn (slug) chỉ được chứa chữ thường, số và dấu gạch ngang (1-64 ký tự).",
         });
       }
 
