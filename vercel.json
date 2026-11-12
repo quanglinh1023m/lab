@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/editor",
+      "destination": "/editor.html"
+    },
+    {
       "source": "/v/:slug",
       "destination": "/api/view?slug=:slug"
     }

@@ -294,12 +294,12 @@
           </div>
 
           <div>
-            <label for="slug-input">Tên đường dẫn (slug - tùy chọn)</label>
+            <label for="slug-input">Tên đường dẫn (tùy chọn, không cần dấu -)</label>
             <input
               type="text"
               id="slug-input"
               pattern="[a-zA-Z0-9\-]{2,64}"
-              placeholder="Để trống để tạo tự động"
+              placeholder="Để trống hoặc nhập liền (vd: trangmoi)"
             />
           </div>
         </div>
@@ -385,8 +385,7 @@
         .replace(/đ/g, "d")
         .replace(/Đ/g, "D")
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "")
+        .replace(/[^a-z0-9]+/g, "")
         .slice(0, 64);
       return cleaned.length >= 2 ? cleaned : "";
     }
@@ -437,7 +436,7 @@
     function showSuccess(slug, updated) {
       const origin = window.location.origin;
       const viewPath = `/v/${encodeURIComponent(slug)}`;
-      const editPath = `/?edit=${encodeURIComponent(slug)}`;
+      const editPath = `/editor?edit=${encodeURIComponent(slug)}`;
 
       feedbackBox.className = "result-box";
       feedbackBox.replaceChildren();

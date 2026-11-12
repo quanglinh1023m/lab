@@ -158,6 +158,24 @@ describe("api/save handler", () => {
     assert.equal(saveHandler.verifyPin("123456", saved.edit_pin), true);
   });
 
+  it("creates a new page with alphanumeric slug without hyphens", async () => {
+    const mockDb = createMockSupabase();
+    const handler = saveHandler.createSaveHandler({ getSupabaseClient: () => mockDb });
+    const res = createMockRes();
+
+    await handler(
+      {
+        method: "POST",
+        body: { slug: "trangmoi2026", html_content: "<h1>No Hyphen</h1>", edit_pin: "1234" },
+      },
+      res
+    );
+
+    assert.equal(res.statusCode, 201);
+    assert.deepEqual(res.body, { slug: "trangmoi2026", updated: false });
+    assert.equal(mockDb.store.get("trangmoi2026").html_content, "<h1>No Hyphen</h1>");
+  });
+
   it("auto-generates a valid slug when omitted", async () => {
     const mockDb = createMockSupabase();
     const handler = saveHandler.createSaveHandler({ getSupabaseClient: () => mockDb });
