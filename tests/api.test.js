@@ -4,6 +4,8 @@ const assert = require("node:assert/strict");
 const saveHandler = require("../api/save");
 const viewHandler = require("../api/view");
 
+const TEST_ADMIN_SECRET = "test-admin-secret-999";
+
 function createMockRes() {
   const headers = {};
   const res = {
@@ -30,7 +32,12 @@ function createMockRes() {
 }
 
 function createMockSupabase(initialRows = [], options = {}) {
-  const store = new Map(initialRows.map((row) => [row.slug, { ...row }]));
+  const store = new Map(
+    initialRows.map((row) => [
+      row.slug,
+      { failed_attempts: 0, locked_until: null, ...row },
+    ])
+  );
 
   return {
     store,
@@ -54,10 +61,15 @@ function createMockSupabase(initialRows = [], options = {}) {
           };
         },
         async insert(row) {
-          if (options.insertError) {
-            return { error: { message: options.insertError } };
+          if (options.insertError || options.insertErrorCode) {
+            return {
+              error: {
+                message: options.insertError || "Insert failed",
+                code: options.insertErrorCode,
+              },
+            };
           }
-          store.set(row.slug, { ...row });
+          store.set(row.slug, { failed_attempts: 0, locked_until: null, ...row });
           return { error: null };
         },
         update(patch) {
@@ -80,7 +92,7 @@ function createMockSupabase(initialRows = [], options = {}) {
   };
 }
 
-describe("PIN hashing utilities", () => {
+describe("PIN hashing & Admin secret utilities", () => {
   it("hashes and verifies matching PIN while rejecting wrong PINs", () => {
     const hashed = saveHandler.hashPin("4829");
     assert.ok(hashed.includes(":"));
@@ -89,21 +101,62 @@ describe("PIN hashing utilities", () => {
     assert.equal(saveHandler.verifyPin("9999", hashed), false);
     assert.equal(saveHandler.verifyPin("4829", "invalid-format"), false);
   });
+
+  it("verifies admin secret with constant-time comparison", () => {
+    assert.equal(saveHandler.verifyAdminSecret("abc", "abc"), true);
+    assert.equal(saveHandler.verifyAdminSecret("abc", "abcd"), false);
+    assert.equal(saveHandler.verifyAdminSecret("", "abc"), false);
+  });
 });
 
 describe("api/save handler", () => {
-  it("rejects non-POST requests with 405", async () => {
+  it("rejects non-POST requests with 405 and non-JSON Content-Type with 415", async () => {
     const handler = saveHandler.createSaveHandler({
       getSupabaseClient: () => createMockSupabase(),
+      getAdminSecret: () => TEST_ADMIN_SECRET,
     });
-    const res = createMockRes();
-    await handler({ method: "GET" }, res);
-    assert.equal(res.statusCode, 405);
+
+    const getRes = createMockRes();
+    await handler({ method: "GET" }, getRes);
+    assert.equal(getRes.statusCode, 405);
+    assert.equal(getRes.headers["cache-control"], "no-store, max-age=0");
+
+    const xmlRes = createMockRes();
+    await handler(
+      { method: "POST", headers: { "content-type": "text/plain" }, body: {} },
+      xmlRes
+    );
+    assert.equal(xmlRes.statusCode, 415);
+  });
+
+  it("fails closed with 500 when ADMIN_SECRET is missing and 401 on wrong admin secret", async () => {
+    const noSecretHandler = saveHandler.createSaveHandler({
+      getSupabaseClient: () => createMockSupabase(),
+      getAdminSecret: () => "",
+    });
+    const noSecretRes = createMockRes();
+    await noSecretHandler(
+      { method: "POST", body: { admin_secret: "any", html_content: "<h1>Hi</h1>", edit_pin: "1234" } },
+      noSecretRes
+    );
+    assert.equal(noSecretRes.statusCode, 500);
+
+    const handler = saveHandler.createSaveHandler({
+      getSupabaseClient: () => createMockSupabase(),
+      getAdminSecret: () => TEST_ADMIN_SECRET,
+    });
+    const wrongSecretRes = createMockRes();
+    await handler(
+      { method: "POST", body: { admin_secret: "wrong", html_content: "<h1>Hi</h1>", edit_pin: "1234" } },
+      wrongSecretRes
+    );
+    assert.equal(wrongSecretRes.statusCode, 401);
   });
 
   it("validates empty HTML, invalid PIN, reserved/invalid slug, and malformed JSON", async () => {
     const handler = saveHandler.createSaveHandler({
       getSupabaseClient: () => createMockSupabase(),
+      getAdminSecret: () => TEST_ADMIN_SECRET,
     });
 
     const badJsonRes = createMockRes();
@@ -111,45 +164,67 @@ describe("api/save handler", () => {
     assert.equal(badJsonRes.statusCode, 400);
 
     const emptyHtmlRes = createMockRes();
-    await handler({ method: "POST", body: { html_content: "   ", edit_pin: "1234" } }, emptyHtmlRes);
+    await handler(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, html_content: "   ", edit_pin: "1234" } },
+      emptyHtmlRes
+    );
     assert.equal(emptyHtmlRes.statusCode, 400);
 
     const badPinRes = createMockRes();
-    await handler({ method: "POST", body: { html_content: "<h1>Hi</h1>", edit_pin: "12a4" } }, badPinRes);
+    await handler(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, html_content: "<h1>Hi</h1>", edit_pin: "12a4" } },
+      badPinRes
+    );
     assert.equal(badPinRes.statusCode, 400);
 
     const reservedApiRes = createMockRes();
-    await handler({ method: "POST", body: { slug: "api", html_content: "<h1>Hi</h1>", edit_pin: "1234" } }, reservedApiRes);
+    await handler(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, slug: "api", html_content: "<h1>Hi</h1>", edit_pin: "1234" } },
+      reservedApiRes
+    );
     assert.equal(reservedApiRes.statusCode, 400);
 
     const reservedEditorRes = createMockRes();
-    await handler({ method: "POST", body: { slug: "editor", html_content: "<h1>Hi</h1>", edit_pin: "1234" } }, reservedEditorRes);
+    await handler(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, slug: "editor", html_content: "<h1>Hi</h1>", edit_pin: "1234" } },
+      reservedEditorRes
+    );
     assert.equal(reservedEditorRes.statusCode, 400);
 
     const badCharSlugRes = createMockRes();
-    await handler({ method: "POST", body: { slug: "a b", html_content: "<h1>Hi</h1>", edit_pin: "1234" } }, badCharSlugRes);
+    await handler(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, slug: "a b", html_content: "<h1>Hi</h1>", edit_pin: "1234" } },
+      badCharSlugRes
+    );
     assert.equal(badCharSlugRes.statusCode, 400);
   });
 
   it("rejects HTML payloads exceeding 2 MB with 413", async () => {
     const handler = saveHandler.createSaveHandler({
       getSupabaseClient: () => createMockSupabase(),
+      getAdminSecret: () => TEST_ADMIN_SECRET,
     });
     const res = createMockRes();
     const oversized = "a".repeat(saveHandler.MAX_HTML_BYTES + 1);
-    await handler({ method: "POST", body: { html_content: oversized, edit_pin: "1234" } }, res);
+    await handler(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, html_content: oversized, edit_pin: "1234" } },
+      res
+    );
     assert.equal(res.statusCode, 413);
   });
 
   it("creates a new page with custom slug and hashed PIN", async () => {
     const mockDb = createMockSupabase();
-    const handler = saveHandler.createSaveHandler({ getSupabaseClient: () => mockDb });
+    const handler = saveHandler.createSaveHandler({
+      getSupabaseClient: () => mockDb,
+      getAdminSecret: () => TEST_ADMIN_SECRET,
+    });
     const res = createMockRes();
 
     await handler(
       {
         method: "POST",
-        body: { slug: "Demo-Page", html_content: "<h1>Hello</h1>", edit_pin: "123456" },
+        body: { admin_secret: TEST_ADMIN_SECRET, slug: "Demo-Page", html_content: "<h1>Hello</h1>", edit_pin: "123456" },
       },
       res
     );
@@ -164,13 +239,16 @@ describe("api/save handler", () => {
 
   it("creates a new page with alphanumeric slug without hyphens", async () => {
     const mockDb = createMockSupabase();
-    const handler = saveHandler.createSaveHandler({ getSupabaseClient: () => mockDb });
+    const handler = saveHandler.createSaveHandler({
+      getSupabaseClient: () => mockDb,
+      getAdminSecret: () => TEST_ADMIN_SECRET,
+    });
     const res = createMockRes();
 
     await handler(
       {
         method: "POST",
-        body: { slug: "trangmoi2026", html_content: "<h1>No Hyphen</h1>", edit_pin: "1234" },
+        body: { admin_secret: TEST_ADMIN_SECRET, slug: "trangmoi2026", html_content: "<h1>No Hyphen</h1>", edit_pin: "1234" },
       },
       res
     );
@@ -182,11 +260,17 @@ describe("api/save handler", () => {
 
   it("allows 1-character slugs and 'index' slug", async () => {
     const mockDb = createMockSupabase();
-    const save = saveHandler.createSaveHandler({ getSupabaseClient: () => mockDb });
+    const save = saveHandler.createSaveHandler({
+      getSupabaseClient: () => mockDb,
+      getAdminSecret: () => TEST_ADMIN_SECRET,
+    });
     const view = viewHandler.createViewHandler({ getSupabaseClient: () => mockDb });
 
     const saveOneRes = createMockRes();
-    await save({ method: "POST", body: { slug: "1", html_content: "<h1>One</h1>", edit_pin: "1234" } }, saveOneRes);
+    await save(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, slug: "1", html_content: "<h1>One</h1>", edit_pin: "1234" } },
+      saveOneRes
+    );
     assert.equal(saveOneRes.statusCode, 201);
     assert.equal(saveOneRes.body.slug, "1");
 
@@ -196,7 +280,10 @@ describe("api/save handler", () => {
     assert.equal(viewOneRes.body, "<h1>One</h1>");
 
     const saveIndexRes = createMockRes();
-    await save({ method: "POST", body: { slug: "index", html_content: "<h1>Index Slug</h1>", edit_pin: "1234" } }, saveIndexRes);
+    await save(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, slug: "index", html_content: "<h1>Index Slug</h1>", edit_pin: "1234" } },
+      saveIndexRes
+    );
     assert.equal(saveIndexRes.statusCode, 201);
     assert.equal(saveIndexRes.body.slug, "index");
 
@@ -208,70 +295,119 @@ describe("api/save handler", () => {
 
   it("auto-generates a valid slug when omitted", async () => {
     const mockDb = createMockSupabase();
-    const handler = saveHandler.createSaveHandler({ getSupabaseClient: () => mockDb });
+    const handler = saveHandler.createSaveHandler({
+      getSupabaseClient: () => mockDb,
+      getAdminSecret: () => TEST_ADMIN_SECRET,
+    });
     const res = createMockRes();
 
-    await handler({ method: "POST", body: { html_content: "<p>Auto</p>", edit_pin: "4321" } }, res);
+    await handler(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, html_content: "<p>Auto</p>", edit_pin: "4321" } },
+      res
+    );
 
     assert.equal(res.statusCode, 201);
     assert.match(res.body.slug, /^[a-f0-9]{8}$/);
     assert.equal(mockDb.store.has(res.body.slug), true);
   });
 
-  it("returns 409 when creating with an already-existing slug", async () => {
+  it("returns 409 when creating with an already-existing slug or on Postgres 23505 race condition", async () => {
     const mockDb = createMockSupabase([
       { slug: "taken", html_content: "<p>Old</p>", edit_pin: saveHandler.hashPin("1234") },
     ]);
-    const handler = saveHandler.createSaveHandler({ getSupabaseClient: () => mockDb });
+    const handler = saveHandler.createSaveHandler({
+      getSupabaseClient: () => mockDb,
+      getAdminSecret: () => TEST_ADMIN_SECRET,
+    });
     const res = createMockRes();
 
     await handler(
-      { method: "POST", body: { slug: "taken", html_content: "<p>New</p>", edit_pin: "1234" } },
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, slug: "taken", html_content: "<p>New</p>", edit_pin: "1234" } },
       res
     );
-
     assert.equal(res.statusCode, 409);
-    assert.equal(mockDb.store.get("taken").html_content, "<p>Old</p>");
+
+    const raceDb = createMockSupabase([], { insertErrorCode: "23505" });
+    const raceHandler = saveHandler.createSaveHandler({
+      getSupabaseClient: () => raceDb,
+      getAdminSecret: () => TEST_ADMIN_SECRET,
+    });
+    const raceRes = createMockRes();
+    await raceHandler(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, slug: "race-slug", html_content: "<p>New</p>", edit_pin: "1234" } },
+      raceRes
+    );
+    assert.equal(raceRes.statusCode, 409);
   });
 
-  it("updates an existing page only when PIN matches and returns 403/404 otherwise", async () => {
+  it("updates an existing page only when PIN matches, locks out after 5 wrong PINs (429), and resets on success", async () => {
+    let fakeNow = 1_700_000_000_000;
     const mockDb = createMockSupabase([
       { slug: "my-site", html_content: "<h1>V1</h1>", edit_pin: saveHandler.hashPin("7788") },
     ]);
-    const handler = saveHandler.createSaveHandler({ getSupabaseClient: () => mockDb });
-
-    const wrongPinRes = createMockRes();
-    await handler(
-      { method: "POST", body: { mode: "edit", slug: "my-site", html_content: "<h1>V2</h1>", edit_pin: "0000" } },
-      wrongPinRes
-    );
-    assert.equal(wrongPinRes.statusCode, 403);
-    assert.equal(mockDb.store.get("my-site").html_content, "<h1>V1</h1>");
+    const handler = saveHandler.createSaveHandler({
+      getSupabaseClient: () => mockDb,
+      getAdminSecret: () => TEST_ADMIN_SECRET,
+      now: () => fakeNow,
+    });
 
     const missingRes = createMockRes();
     await handler(
-      { method: "POST", body: { mode: "edit", slug: "unknown", html_content: "<h1>V2</h1>", edit_pin: "7788" } },
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, mode: "edit", slug: "unknown", html_content: "<h1>V2</h1>", edit_pin: "7788" } },
       missingRes
     );
     assert.equal(missingRes.statusCode, 404);
 
+    // 4 wrong PIN attempts -> 403
+    for (let i = 0; i < 4; i++) {
+      const wrongRes = createMockRes();
+      await handler(
+        { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, mode: "edit", slug: "my-site", html_content: "<h1>V2</h1>", edit_pin: "0000" } },
+        wrongRes
+      );
+      assert.equal(wrongRes.statusCode, 403);
+    }
+
+    // 5th wrong PIN attempt -> 429 lockout
+    const lockRes = createMockRes();
+    await handler(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, mode: "edit", slug: "my-site", html_content: "<h1>V2</h1>", edit_pin: "0000" } },
+      lockRes
+    );
+    assert.equal(lockRes.statusCode, 429);
+
+    // Even correct PIN is blocked during 15-minute lockout
+    const blockedCorrectRes = createMockRes();
+    await handler(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, mode: "edit", slug: "my-site", html_content: "<h1>V2</h1>", edit_pin: "7788" } },
+      blockedCorrectRes
+    );
+    assert.equal(blockedCorrectRes.statusCode, 429);
+
+    // Advance time past 15 minutes -> correct PIN succeeds and resets failed_attempts
+    fakeNow += 16 * 60 * 1000;
     const okRes = createMockRes();
     await handler(
-      { method: "POST", body: { mode: "edit", slug: "my-site", html_content: "<h1>V2</h1>", edit_pin: "7788" } },
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, mode: "edit", slug: "my-site", html_content: "<h1>V2</h1>", edit_pin: "7788" } },
       okRes
     );
     assert.equal(okRes.statusCode, 200);
     assert.deepEqual(okRes.body, { slug: "my-site", updated: true });
     assert.equal(mockDb.store.get("my-site").html_content, "<h1>V2</h1>");
+    assert.equal(mockDb.store.get("my-site").failed_attempts, 0);
+    assert.equal(mockDb.store.get("my-site").locked_until, null);
   });
 
   it("returns 500 when Supabase reports a database error", async () => {
     const mockDb = createMockSupabase([], { insertError: "DB down" });
-    const handler = saveHandler.createSaveHandler({ getSupabaseClient: () => mockDb });
+    const handler = saveHandler.createSaveHandler({
+      getSupabaseClient: () => mockDb,
+      getAdminSecret: () => TEST_ADMIN_SECRET,
+    });
     const res = createMockRes();
 
     await handler(
-      { method: "POST", body: { slug: "ok-slug", html_content: "<p>Hi</p>", edit_pin: "1234" } },
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, slug: "ok-slug", html_content: "<p>Hi</p>", edit_pin: "1234" } },
       res
     );
 
@@ -308,7 +444,7 @@ describe("api/view handler", () => {
     assert.equal(res.headers["content-type"], "text/html; charset=utf-8");
   });
 
-  it("returns 200 with HTML content and proper headers", async () => {
+  it("returns 200 with HTML content and sandbox isolation headers", async () => {
     const mockDb = createMockSupabase([
       { slug: "live-page", html_content: "<!DOCTYPE html><h1>Live</h1>", edit_pin: "hash" },
     ]);
@@ -321,6 +457,11 @@ describe("api/view handler", () => {
     assert.equal(res.headers["content-type"], "text/html; charset=utf-8");
     assert.equal(res.headers["cache-control"], "no-store, max-age=0");
     assert.equal(res.headers["x-content-type-options"], "nosniff");
+    assert.equal(res.headers["referrer-policy"], "no-referrer");
+    assert.equal(
+      res.headers["content-security-policy"],
+      "sandbox allow-scripts allow-forms allow-popups allow-modals"
+    );
     assert.equal(res.body, "<!DOCTYPE html><h1>Live</h1>");
   });
 
@@ -333,4 +474,3 @@ describe("api/view handler", () => {
     assert.equal(res.statusCode, 500);
   });
 });
-

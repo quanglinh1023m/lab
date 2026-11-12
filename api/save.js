@@ -3,6 +3,8 @@ const { createClient } = require("@supabase/supabase-js");
 
 const MAX_HTML_BYTES = 2 * 1024 * 1024; // 2 MB safety cap below Vercel's 4.5 MB limit
 const DB_TIMEOUT_MS = 10000;
+const MAX_PIN_ATTEMPTS = 5;
+const LOCKOUT_MS = 15 * 60 * 1000; // 15 minutes
 const RESERVED_SLUGS = new Set(["api", "editor"]);
 const SLUG_REGEX = /^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$/;
 const PIN_REGEX = /^\d{4,6}$/;
@@ -41,19 +43,42 @@ function verifyPin(pin, storedValue) {
   return crypto.timingSafeEqual(derived, storedBuf);
 }
 
+function verifyAdminSecret(provided, expected) {
+  if (typeof provided !== "string" || typeof expected !== "string") return false;
+  if (!provided || !expected) return false;
+  const hashProvided = crypto.createHash("sha256").update(provided, "utf8").digest();
+  const hashExpected = crypto.createHash("sha256").update(expected, "utf8").digest();
+  return crypto.timingSafeEqual(hashProvided, hashExpected);
+}
+
 function generateSlug() {
   return crypto.randomBytes(4).toString("hex");
 }
 
 function createSaveHandler(deps = {}) {
   const getClient = deps.getSupabaseClient || getSupabaseClient;
+  const getAdminSecret = deps.getAdminSecret || (() => process.env.ADMIN_SECRET);
+  const nowFn = deps.now || (() => Date.now());
 
   return async function handler(req, res) {
+    res.setHeader("Cache-Control", "no-store, max-age=0");
+
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Method not allowed." });
     }
 
+    const contentType = req.headers?.["content-type"];
+    if (contentType && !String(contentType).toLowerCase().includes("application/json")) {
+      return res.status(415).json({ error: "Content-Type phải là application/json." });
+    }
+
     try {
+      const expectedAdminSecret = getAdminSecret();
+      if (!expectedAdminSecret || !String(expectedAdminSecret).trim()) {
+        console.error(JSON.stringify({ event: "save_missing_admin_secret" }));
+        return res.status(500).json({ error: "Máy chủ chưa cấu hình ADMIN_SECRET." });
+      }
+
       let body = req.body || {};
       if (typeof body === "string") {
         try {
@@ -61,6 +86,11 @@ function createSaveHandler(deps = {}) {
         } catch {
           return res.status(400).json({ error: "Dữ liệu JSON không hợp lệ." });
         }
+      }
+
+      const providedSecret = typeof body.admin_secret === "string" ? body.admin_secret : "";
+      if (!verifyAdminSecret(providedSecret, String(expectedAdminSecret))) {
+        return res.status(401).json({ error: "Mật khẩu Admin không chính xác." });
       }
 
       const mode = body.mode === "edit" ? "edit" : "create";
@@ -90,7 +120,7 @@ function createSaveHandler(deps = {}) {
       if (mode === "edit") {
         const { data: existing, error: fetchError } = await supabase
           .from("pages")
-          .select("slug, edit_pin")
+          .select("slug, edit_pin, failed_attempts, locked_until")
           .eq("slug", slug)
           .maybeSingle();
 
@@ -101,13 +131,46 @@ function createSaveHandler(deps = {}) {
         if (!existing) {
           return res.status(404).json({ error: "Không tìm thấy trang cần cập nhật." });
         }
+
+        const now = nowFn();
+        const lockedUntilMs = existing.locked_until ? Date.parse(existing.locked_until) : 0;
+        if (lockedUntilMs > now) {
+          const waitMinutes = Math.ceil((lockedUntilMs - now) / 60000);
+          return res.status(429).json({
+            error: `Nhập sai PIN quá nhiều lần. Vui lòng thử lại sau ${waitMinutes} phút.`,
+          });
+        }
+
         if (!verifyPin(editPin, existing.edit_pin)) {
-          return res.status(403).json({ error: "Mã PIN không chính xác." });
+          const nextAttempts = (Number(existing.failed_attempts) || 0) + 1;
+          const isLocked = nextAttempts >= MAX_PIN_ATTEMPTS;
+          const lockPatch = isLocked
+            ? { failed_attempts: nextAttempts, locked_until: new Date(now + LOCKOUT_MS).toISOString() }
+            : { failed_attempts: nextAttempts };
+
+          const { error: lockUpdateError } = await supabase
+            .from("pages")
+            .update(lockPatch)
+            .eq("slug", slug);
+
+          if (lockUpdateError) {
+            console.error(JSON.stringify({ event: "save_lock_update_error", slug, message: lockUpdateError.message }));
+          }
+
+          if (isLocked) {
+            return res.status(429).json({
+              error: "Nhập sai PIN 5 lần liên tiếp. Đã tạm khóa sửa trang trong 15 phút.",
+            });
+          }
+
+          return res.status(403).json({
+            error: `Mã PIN không chính xác. Còn ${MAX_PIN_ATTEMPTS - nextAttempts} lần thử.`,
+          });
         }
 
         const { error: updateError } = await supabase
           .from("pages")
-          .update({ html_content: htmlContent })
+          .update({ html_content: htmlContent, failed_attempts: 0, locked_until: null })
           .eq("slug", slug);
 
         if (updateError) {
@@ -141,6 +204,11 @@ function createSaveHandler(deps = {}) {
       });
 
       if (insertError) {
+        if (insertError.code === "23505") {
+          return res.status(409).json({
+            error: "Đường dẫn này đã tồn tại. Vui lòng chọn tên khác hoặc dùng link sửa.",
+          });
+        }
         console.error(JSON.stringify({ event: "save_insert_error", slug, message: insertError.message }));
         return res.status(500).json({ error: "Không thể lưu trang mới." });
       }
@@ -157,7 +225,9 @@ const handler = createSaveHandler();
 handler.createSaveHandler = createSaveHandler;
 handler.hashPin = hashPin;
 handler.verifyPin = verifyPin;
+handler.verifyAdminSecret = verifyAdminSecret;
 handler.MAX_HTML_BYTES = MAX_HTML_BYTES;
+handler.MAX_PIN_ATTEMPTS = MAX_PIN_ATTEMPTS;
 handler.SLUG_REGEX = SLUG_REGEX;
 handler.PIN_REGEX = PIN_REGEX;
 

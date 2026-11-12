@@ -3,9 +3,15 @@ CREATE TABLE IF NOT EXISTS public.pages (
   slug TEXT UNIQUE NOT NULL,
   html_content TEXT NOT NULL,
   edit_pin TEXT NOT NULL,
+  failed_attempts INT NOT NULL DEFAULT 0,
+  locked_until TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Idempotent migration for existing tables
+ALTER TABLE public.pages ADD COLUMN IF NOT EXISTS failed_attempts INT NOT NULL DEFAULT 0;
+ALTER TABLE public.pages ADD COLUMN IF NOT EXISTS locked_until TIMESTAMPTZ;
 
 -- Block anonymous public access to PIN hashes via Supabase REST API
 ALTER TABLE public.pages ENABLE ROW LEVEL SECURITY;

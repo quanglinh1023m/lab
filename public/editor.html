@@ -277,6 +277,17 @@
 
     <section class="card-panel">
       <form id="publish-form" novalidate>
+        <div>
+          <label for="admin-secret-input">Mật khẩu Admin (chỉ Admin mới được xuất bản / sửa) *</label>
+          <input
+            type="password"
+            id="admin-secret-input"
+            autocomplete="current-password"
+            placeholder="Nhập mật khẩu Admin (ADMIN_SECRET)"
+            required
+          />
+        </div>
+
         <div class="grid">
           <div>
             <label for="pin-input">Mã PIN bảo vệ (4–6 chữ số) *</label>
@@ -351,6 +362,7 @@
 
   <script>
     const MAX_HTML_BYTES = 2 * 1024 * 1024;
+    const ADMIN_STORAGE_KEY = "html_publisher_admin_secret";
     const params = new URLSearchParams(window.location.search);
     const editSlug = (params.get("edit") || "").trim().toLowerCase();
     const isEditMode = editSlug.length > 0;
@@ -359,6 +371,7 @@
     const pageTitleSpan = document.querySelector("#page-title span");
     const pageSubtitle = document.getElementById("page-subtitle");
     const modeBadge = document.getElementById("mode-badge");
+    const adminSecretInput = document.getElementById("admin-secret-input");
     const pinInput = document.getElementById("pin-input");
     const slugInput = document.getElementById("slug-input");
     const dropzone = document.getElementById("dropzone");
@@ -370,6 +383,11 @@
     const submitBtn = document.getElementById("submit-btn");
     const submitLabel = document.getElementById("submit-label");
     const feedbackBox = document.getElementById("feedback-box");
+
+    const storedAdminSecret = sessionStorage.getItem(ADMIN_STORAGE_KEY);
+    if (storedAdminSecret) {
+      adminSecretInput.value = storedAdminSecret;
+    }
 
     function updateByteCounter() {
       const bytes = new Blob([htmlInput.value]).size;
@@ -476,7 +494,11 @@
       reader.onload = () => {
         htmlInput.value = typeof reader.result === "string" ? reader.result : "";
         updateByteCounter();
-        if (autoUploadToggle.checked && /^\d{4,6}$/.test(pinInput.value.trim())) {
+        if (
+          autoUploadToggle.checked &&
+          adminSecretInput.value.length > 0 &&
+          /^\d{4,6}$/.test(pinInput.value.trim())
+        ) {
           form.requestSubmit();
         }
       };
@@ -550,8 +572,15 @@
       feedbackBox.className = "hidden";
 
       const htmlContent = htmlInput.value;
+      const adminSecret = adminSecretInput.value;
       const pin = pinInput.value.trim();
       const slug = slugInput.value.trim().toLowerCase();
+
+      if (!adminSecret) {
+        showError("Vui lòng nhập Mật khẩu Admin.");
+        adminSecretInput.focus();
+        return;
+      }
 
       if (!/^\d{4,6}$/.test(pin)) {
         showError("Mã PIN phải gồm đúng 4 đến 6 chữ số.");
@@ -578,6 +607,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            admin_secret: adminSecret,
             slug: slug || undefined,
             html_content: htmlContent,
             edit_pin: pin,
@@ -587,10 +617,14 @@
         });
 
         const data = await res.json().catch(() => ({}));
+        if (res.status === 401) {
+          sessionStorage.removeItem(ADMIN_STORAGE_KEY);
+        }
         if (!res.ok) {
           throw new Error(data.error || "Lưu trang thất bại.");
         }
 
+        sessionStorage.setItem(ADMIN_STORAGE_KEY, adminSecret);
         showSuccess(data.slug, isEditMode);
       } catch (err) {
         showError(err.message || "Có lỗi xảy ra khi kết nối máy chủ.");

@@ -56,6 +56,11 @@ function createViewHandler(deps = {}) {
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       res.setHeader("Cache-Control", "no-store, max-age=0");
       res.setHeader("X-Content-Type-Options", "nosniff");
+      res.setHeader("Referrer-Policy", "no-referrer");
+      res.setHeader(
+        "Content-Security-Policy",
+        "sandbox allow-scripts allow-forms allow-popups allow-modals"
+      );
       return res.status(200).send(data.html_content);
     } catch (err) {
       console.error(JSON.stringify({ event: "view_unhandled_error", slug, message: err.message }));
