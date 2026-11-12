@@ -1,0 +1,13 @@
+{
+  "name": "html-publisher",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimalist HTML publisher with PIN-protected editing on Vercel + Supabase",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1"
+  }
+}
+

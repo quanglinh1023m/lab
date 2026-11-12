@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTML Publisher — Xuất bản trang HTML nhanh</title>
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='16 18 22 12 16 6'/%3E%3Cpolyline points='8 6 2 12 8 18'/%3E%3C/svg%3E"
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+  />
+  <style>
+    :root {
+      --color-bg: #0f172a;
+      --color-card: #1b2336;
+      --color-muted: #272f42;
+      --color-border: #475569;
+      --color-fg: #f8fafc;
+      --color-muted-fg: #cbd5e1;
+      --color-accent: #22c55e;
+      --color-accent-hover: #16a34a;
+      --color-on-accent: #0f172a;
+      --color-danger: #ef4444;
+      --pico-font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+      --pico-font-family-monospace: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+      --pico-background-color: var(--color-bg);
+      --pico-card-background-color: var(--color-card);
+      --pico-color: var(--color-fg);
+      --pico-muted-color: var(--color-muted-fg);
+      --pico-border-color: var(--color-border);
+      --pico-primary: var(--color-accent);
+      --pico-primary-hover: var(--color-accent-hover);
+      --pico-primary-inverse: var(--color-on-accent);
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-fg);
+      min-height: 100vh;
+    }
+
+    main.container {
+      max-width: 880px;
+      padding-top: 2.25rem;
+      padding-bottom: 3.5rem;
+    }
+
+    .app-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.35rem;
+      font-size: 1.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background-color: var(--color-muted);
+      border: 1px solid var(--color-border);
+      font-size: 0.8rem;
+      font-family: var(--pico-font-family-monospace);
+      color: var(--color-fg);
+    }
+
+    .card-panel {
+      background-color: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    input, textarea {
+      background-color: var(--color-bg) !important;
+      border-color: var(--color-border) !important;
+      color: var(--color-fg) !important;
+    }
+
+    textarea#html-input {
+      font-family: var(--pico-font-family-monospace);
+      font-size: 0.875rem;
+      line-height: 1.55;
+      min-height: 300px;
+      resize: vertical;
+    }
+
+    .dropzone {
+      background-color: var(--color-bg);
+      color: var(--color-fg);
+      border: 2px dashed var(--color-border);
+      border-radius: 0.65rem;
+      padding: 1.25rem;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      transition: border-color 180ms ease, background-color 180ms ease;
+    }
+
+    .dropzone:hover,
+    .dropzone.dragover {
+      border-color: var(--color-accent);
+      background-color: #11241f;
+    }
+
+    .dropzone-title {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      color: var(--color-fg);
+      margin-bottom: 0.65rem;
+    }
+
+    .dropzone code {
+      background-color: var(--color-muted);
+      color: var(--color-fg);
+      border: 1px solid var(--color-border);
+    }
+
+    .file-meta {
+      font-size: 0.85rem;
+      color: var(--color-muted-fg);
+      margin-top: 0.65rem;
+      font-family: var(--pico-font-family-monospace);
+    }
+
+    .textarea-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .byte-counter {
+      font-size: 0.8rem;
+      font-family: var(--pico-font-family-monospace);
+      color: var(--color-muted-fg);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      font-weight: 600;
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-on-accent);
+      cursor: pointer;
+      transition: background-color 180ms ease, border-color 180ms ease;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--color-accent-hover);
+      border-color: var(--color-accent-hover);
+    }
+
+    .btn-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.8rem;
+      background-color: var(--color-muted);
+      border: 1px solid var(--color-border);
+      color: var(--color-fg);
+      cursor: pointer;
+      width: auto;
+      margin: 0;
+    }
+
+    .btn-copy:hover {
+      border-color: var(--color-accent);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--color-fg) !important;
+      outline-offset: 2px !important;
+    }
+
+    .hidden { display: none !important; }
+
+    .result-box {
+      background-color: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-left: 4px solid var(--color-accent);
+      border-radius: 0.65rem;
+      padding: 1.25rem;
+    }
+
+    .error-box {
+      background-color: rgba(239, 68, 68, 0.12);
+      border: 1px solid var(--color-danger);
+      border-left: 4px solid var(--color-danger);
+      border-radius: 0.65rem;
+      padding: 1.1rem 1.25rem;
+      color: #fecaca;
+    }
+
+    .link-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      padding: 0.6rem 0.75rem;
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      margin-top: 0.65rem;
+    }
+
+    .link-row a {
+      font-family: var(--pico-font-family-monospace);
+      font-size: 0.85rem;
+      word-break: break-all;
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header class="app-header">
+      <div>
+        <h1 id="page-title" class="brand-title">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <span>Xuất bản trang HTML</span>
+        </h1>
+        <p id="page-subtitle" style="margin-bottom: 0; color: var(--color-muted-fg);">
+          Upload file <code>.html</code> hoặc dán mã nguồn để tạo đường link web chạy trực tiếp.
+        </p>
+      </div>
+      <span id="mode-badge" class="brand-badge">MODE: CREATE</span>
+    </header>
+
+    <section class="card-panel">
+      <form id="publish-form" novalidate>
+        <div class="grid">
+          <div>
+            <label for="pin-input">Mã PIN bảo vệ (4–6 chữ số) *</label>
+            <input
+              type="password"
+              id="pin-input"
+              inputmode="numeric"
+              pattern="\d{4,6}"
+              minlength="4"
+              maxlength="6"
+              autocomplete="off"
+              placeholder="Ví dụ: 1234"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="slug-input">Tên đường dẫn (slug - tùy chọn)</label>
+            <input
+              type="text"
+              id="slug-input"
+              pattern="[a-zA-Z0-9\-]{2,64}"
+              placeholder="Để trống để tạo tự động"
+            />
+          </div>
+        </div>
+
+        <div id="dropzone" class="dropzone">
+          <div class="dropzone-title">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Kéo thả file <code>.html</code> vào đây hoặc chọn từ máy</span>
+          </div>
+          <label for="file-input" class="hidden">Chọn file HTML</label>
+          <input type="file" id="file-input" accept=".html,.htm,text/html" style="margin-bottom: 0;" />
+          <div id="file-meta" class="file-meta">Chưa chọn file nào (giới hạn tối đa 2 MB)</div>
+        </div>
+
+        <label for="auto-upload-toggle" style="margin-bottom: 1rem;">
+          <input type="checkbox" id="auto-upload-toggle" />
+          Tự động lưu vào DB ngay sau khi chọn file (nếu đã nhập mã PIN hợp lệ)
+        </label>
+
+        <div>
+          <div class="textarea-header">
+            <label for="html-input" style="margin-bottom: 0;">Nội dung code HTML *</label>
+            <span id="byte-counter" class="byte-counter">0 bytes / 2 MB</span>
+          </div>
+          <textarea
+            id="html-input"
+            rows="14"
+            placeholder="<!DOCTYPE html>&#10;<html lang=&quot;vi&quot;>&#10;  <body><h1>Xin chào!</h1></body>&#10;</html>"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" id="submit-btn" class="btn-primary">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 2L11 13"></path>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+          <span id="submit-label">Xuất bản</span>
+        </button>
+      </form>
+    </section>
+
+    <article id="feedback-box" class="hidden" aria-live="polite"></article>
+  </main>
+
+  <script>
+    const MAX_HTML_BYTES = 2 * 1024 * 1024;
+    const params = new URLSearchParams(window.location.search);
+    const editSlug = (params.get("edit") || "").trim().toLowerCase();
+    const isEditMode = editSlug.length > 0;
+
+    const form = document.getElementById("publish-form");
+    const pageTitleSpan = document.querySelector("#page-title span");
+    const pageSubtitle = document.getElementById("page-subtitle");
+    const modeBadge = document.getElementById("mode-badge");
+    const pinInput = document.getElementById("pin-input");
+    const slugInput = document.getElementById("slug-input");
+    const dropzone = document.getElementById("dropzone");
+    const fileInput = document.getElementById("file-input");
+    const fileMeta = document.getElementById("file-meta");
+    const autoUploadToggle = document.getElementById("auto-upload-toggle");
+    const htmlInput = document.getElementById("html-input");
+    const byteCounter = document.getElementById("byte-counter");
+    const submitBtn = document.getElementById("submit-btn");
+    const submitLabel = document.getElementById("submit-label");
+    const feedbackBox = document.getElementById("feedback-box");
+
+    function updateByteCounter() {
+      const bytes = new Blob([htmlInput.value]).size;
+      const formatted = bytes >= 1024 ? `${(bytes / 1024).toFixed(1)} KB` : `${bytes} bytes`;
+      byteCounter.textContent = `${formatted} / 2 MB`;
+    }
+
+    function slugifyFilename(filename) {
+      const cleaned = filename
+        .replace(/\.html?$/i, "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 64);
+      return cleaned.length >= 2 ? cleaned : "";
+    }
+
+    function showError(message) {
+      feedbackBox.className = "error-box";
+      feedbackBox.textContent = message;
+    }
+
+    function createLinkRow(labelText, href, fullUrl, openInNewTab) {
+      const row = document.createElement("div");
+      row.className = "link-row";
+
+      const left = document.createElement("div");
+      const label = document.createElement("div");
+      label.style.fontSize = "0.8rem";
+      label.style.color = "var(--color-muted-fg)";
+      label.textContent = labelText;
+
+      const anchor = document.createElement("a");
+      anchor.href = href;
+      anchor.textContent = fullUrl;
+      if (openInNewTab) {
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+      }
+
+      left.append(label, anchor);
+
+      const copyBtn = document.createElement("button");
+      copyBtn.type = "button";
+      copyBtn.className = "btn-copy";
+      copyBtn.textContent = "Copy";
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(fullUrl);
+          copyBtn.textContent = "Đã copy";
+          setTimeout(() => { copyBtn.textContent = "Copy"; }, 1800);
+        } catch {
+          copyBtn.textContent = "Lỗi copy";
+        }
+      });
+
+      row.append(left, copyBtn);
+      return row;
+    }
+
+    function showSuccess(slug, updated) {
+      const origin = window.location.origin;
+      const viewPath = `/v/${encodeURIComponent(slug)}`;
+      const editPath = `/?edit=${encodeURIComponent(slug)}`;
+
+      feedbackBox.className = "result-box";
+      feedbackBox.replaceChildren();
+
+      const heading = document.createElement("strong");
+      heading.textContent = updated
+        ? "Đã cập nhật trang thành công!"
+        : "Đã xuất bản trang thành công!";
+
+      feedbackBox.append(
+        heading,
+        createLinkRow("Link xem trực tiếp", viewPath, `${origin}${viewPath}`, true),
+        createLinkRow("Link sửa lại (cần mã PIN)", editPath, `${origin}${editPath}`, false)
+      );
+    }
+
+    function handleHtmlFile(file) {
+      if (!file) return;
+      if (!/\.html?$/i.test(file.name) && file.type !== "text/html") {
+        showError("Vui lòng chỉ chọn file định dạng .html hoặc .htm.");
+        return;
+      }
+      if (file.size > MAX_HTML_BYTES) {
+        showError("File vượt quá giới hạn 2 MB.");
+        fileInput.value = "";
+        return;
+      }
+
+      const sizeKb = (file.size / 1024).toFixed(1);
+      fileMeta.textContent = `Đã chọn: ${file.name} (${sizeKb} KB)`;
+
+      if (!isEditMode && !slugInput.value.trim()) {
+        slugInput.value = slugifyFilename(file.name);
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        htmlInput.value = typeof reader.result === "string" ? reader.result : "";
+        updateByteCounter();
+        if (autoUploadToggle.checked && /^\d{4,6}$/.test(pinInput.value.trim())) {
+          form.requestSubmit();
+        }
+      };
+      reader.onerror = () => {
+        showError("Không thể đọc file từ máy. Vui lòng thử lại.");
+      };
+      reader.readAsText(file, "UTF-8");
+    }
+
+    fileInput.addEventListener("change", (event) => {
+      handleHtmlFile(event.target.files?.[0]);
+    });
+
+    dropzone.addEventListener("click", (event) => {
+      if (event.target !== fileInput) {
+        fileInput.click();
+      }
+    });
+
+    dropzone.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+      dropzone.classList.remove("dragover");
+    });
+
+    dropzone.addEventListener("drop", (event) => {
+      event.preventDefault();
+      dropzone.classList.remove("dragover");
+      const file = event.dataTransfer?.files?.[0];
+      if (file) handleHtmlFile(file);
+    });
+
+    htmlInput.addEventListener("input", updateByteCounter);
+
+    async function loadExistingPage(slug) {
+      submitBtn.setAttribute("aria-busy", "true");
+      submitBtn.disabled = true;
+      try {
+        const res = await fetch(`/v/${encodeURIComponent(slug)}`, {
+          cache: "no-store",
+          signal: AbortSignal.timeout(15000),
+        });
+        if (!res.ok) {
+          throw new Error("Không tìm thấy trang cần chỉnh sửa.");
+        }
+        htmlInput.value = await res.text();
+        updateByteCounter();
+      } catch (err) {
+        showError(err.message || "Lỗi khi tải nội dung cũ.");
+      } finally {
+        submitBtn.removeAttribute("aria-busy");
+        submitBtn.disabled = false;
+      }
+    }
+
+    if (isEditMode) {
+      pageTitleSpan.textContent = `Cập nhật trang: /v/${editSlug}`;
+      pageSubtitle.textContent = "Nhập đúng mã PIN cũ để ghi đè nội dung mới.";
+      modeBadge.textContent = "MODE: EDIT";
+      slugInput.value = editSlug;
+      slugInput.readOnly = true;
+      submitLabel.textContent = "Cập nhật trang cũ";
+      loadExistingPage(editSlug);
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      feedbackBox.className = "hidden";
+
+      const htmlContent = htmlInput.value;
+      const pin = pinInput.value.trim();
+      const slug = slugInput.value.trim().toLowerCase();
+
+      if (!/^\d{4,6}$/.test(pin)) {
+        showError("Mã PIN phải gồm đúng 4 đến 6 chữ số.");
+        pinInput.focus();
+        return;
+      }
+
+      if (!htmlContent.trim()) {
+        showError("Nội dung code HTML không được để trống.");
+        htmlInput.focus();
+        return;
+      }
+
+      if (new Blob([htmlContent]).size > MAX_HTML_BYTES) {
+        showError("Nội dung HTML vượt quá giới hạn 2 MB.");
+        return;
+      }
+
+      submitBtn.setAttribute("aria-busy", "true");
+      submitBtn.disabled = true;
+
+      try {
+        const res = await fetch("/api/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            slug: slug || undefined,
+            html_content: htmlContent,
+            edit_pin: pin,
+            mode: isEditMode ? "edit" : "create",
+          }),
+          signal: AbortSignal.timeout(15000),
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(data.error || "Lưu trang thất bại.");
+        }
+
+        showSuccess(data.slug, isEditMode);
+      } catch (err) {
+        showError(err.message || "Có lỗi xảy ra khi kết nối máy chủ.");
+      } finally {
+        submitBtn.removeAttribute("aria-busy");
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
+

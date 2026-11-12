@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "/v/:slug",
+      "destination": "/api/view?slug=:slug"
+    }
+  ]
+}
+
