@@ -123,16 +123,16 @@
       <!-- Labster Style Workbench Card -->
       <div class="glass-panel rounded-2xl p-4 flex flex-col gap-3">
         
-        <!-- STEP-BY-STEP DRAG & DROP INSTRUCTION BOARD (5 STEPS) -->
+        <!-- STEP-BY-STEP DRAG & DROP INSTRUCTION BOARD (ACTION-ONLY LABELS SO TEACHER CAN QUESTION STUDENTS) -->
         <div class="labster-hud rounded-xl p-3.5 flex flex-col gap-2.5">
           <div class="flex items-start justify-between gap-2">
             <div class="space-y-1">
               <div class="flex items-center gap-2">
                 <span class="inline-block w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
-                <span class="text-xs uppercase tracking-wider font-bold text-cyan-300">HƯỚNG DẪN THỰC HÀNH KÉO - THẢ (5 BƯỚC)</span>
+                <span class="text-xs uppercase tracking-wider font-bold text-cyan-300">CÁC BƯỚC THỰC HÀNH KÉO - THẢ (SCENE 1)</span>
               </div>
               <p id="labInstructionText" class="text-xs sm:text-sm text-white font-medium leading-relaxed">
-                👉 <strong>Bước 1 (Vô trùng):</strong> Hãy click vào <strong>Đèn cồn Bunsen</strong> để bật lửa, sau đó <strong>nhấn giữ chuột kéo Đèn cồn</strong> đưa ngọn lửa đến <strong>hơ vào Miệng bình tam giác</strong> để mở nắp!
+                👉 <strong>Bước 1:</strong> Click vào <strong>Đèn cồn Bunsen</strong> để bật lửa, sau đó <strong>nhấn giữ chuột kéo lửa hơ miệng bình tam giác</strong>.
               </p>
             </div>
             <span id="labStatusBadge" class="shrink-0 px-3 py-1 rounded-lg text-xs font-bold bg-cyan-500/30 text-cyan-100 border border-cyan-400/60">
@@ -140,32 +140,32 @@
             </span>
           </div>
 
-          <!-- 5 Step Progress Cards -->
+          <!-- 5 Step Progress Cards (Pure physical actions only — no purpose spoilers!) -->
           <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5 pt-1.5 border-t border-cyan-500/30 text-[10.5px]">
             <div id="stepCard1" class="p-2 rounded-lg border step-active-card flex flex-col justify-between">
-              <span class="font-bold text-cyan-300">Bước 1: Khử trùng</span>
-              <span class="text-[9.5px] text-slate-200 mt-0.5">Kéo lửa hơ miệng bình</span>
-              <span id="statusStep1" class="text-[9.5px] text-amber-300 font-semibold mt-1">⏳ Chờ kéo đèn...</span>
+              <span class="font-bold text-cyan-300">Bước 1</span>
+              <span class="text-[9.5px] text-slate-100 mt-0.5 leading-snug">Kéo lửa hơ miệng bình</span>
+              <span id="statusStep1" class="text-[9px] text-amber-300 font-semibold mt-1">⏳ Đang chờ...</span>
             </div>
             <div id="stepCard2" class="p-2 rounded-lg border border-slate-700 bg-slate-900/70 flex flex-col justify-between opacity-60">
-              <span class="font-bold text-sky-300">Bước 2: Cấy giống</span>
-              <span class="text-[9.5px] text-slate-300 mt-0.5">Kéo Pipet vào miệng bình</span>
-              <span id="statusStep2" class="text-[9.5px] text-slate-400 mt-1">🔒 Chưa mở nắp</span>
+              <span class="font-bold text-sky-300">Bước 2</span>
+              <span class="text-[9.5px] text-slate-200 mt-0.5 leading-snug">Kéo Pipet có giống vào miệng bình</span>
+              <span id="statusStep2" class="text-[9px] text-slate-400 mt-1">🔒 Chưa thực hiện</span>
             </div>
             <div id="stepCard3" class="p-2 rounded-lg border border-slate-700 bg-slate-900/70 flex flex-col justify-between opacity-60">
-              <span class="font-bold text-amber-300">Bước 3: Ủ ấm 37°C</span>
-              <span class="text-[9.5px] text-slate-300 mt-0.5">Kéo Bình đặt vào Tủ ấm</span>
-              <span id="statusStep3" class="text-[9.5px] text-slate-400 mt-1">🔒 Chưa cấy</span>
+              <span class="font-bold text-amber-300">Bước 3</span>
+              <span class="text-[9.5px] text-slate-200 mt-0.5 leading-snug">Kéo Bình đặt vào Tủ ấm lắc</span>
+              <span id="statusStep3" class="text-[9px] text-slate-400 mt-1">🔒 Chưa thực hiện</span>
             </div>
             <div id="stepCard4" class="p-2 rounded-lg border border-slate-700 bg-slate-900/70 flex flex-col justify-between opacity-60">
-              <span class="font-bold text-purple-300">Bước 4: Rót mẫu</span>
-              <span class="text-[9.5px] text-slate-300 mt-0.5">Kéo Bình đổ vào Cuvette</span>
-              <span id="statusStep4" class="text-[9.5px] text-slate-400 mt-1">🔒 Cuvette rỗng</span>
+              <span class="font-bold text-purple-300">Bước 4</span>
+              <span class="text-[9.5px] text-slate-200 mt-0.5 leading-snug">Kéo Pipet hút từ bình trong tủ ấm sang Cuvette</span>
+              <span id="statusStep4" class="text-[9px] text-slate-400 mt-1">🔒 Cuvette rỗng</span>
             </div>
             <div id="stepCard5" class="p-2 rounded-lg border border-slate-700 bg-slate-900/70 flex flex-col justify-between opacity-60 col-span-2 sm:col-span-1">
-              <span class="font-bold text-emerald-300">Bước 5: Đo OD600</span>
-              <span class="text-[9.5px] text-slate-300 mt-0.5">Kéo Cuvette vào Máy đo</span>
-              <span id="statusStep5" class="text-[9.5px] text-slate-400 mt-1">Đã đo: 1 mẫu</span>
+              <span class="font-bold text-emerald-300">Bước 5</span>
+              <span class="text-[9.5px] text-slate-200 mt-0.5 leading-snug">Kéo Cuvette đặt vào Máy quang phổ</span>
+              <span id="statusStep5" class="text-[9px] text-slate-400 mt-1">Đã đo: 1 mẫu</span>
             </div>
           </div>
         </div>
@@ -180,7 +180,7 @@
                 🔥 Bật / Tắt lửa
               </button>
             </div>
-            <span>Tủ ấm: <strong id="lblTemp" class="text-slate-300">25.0°C (Tắt)</strong></span>
+            <span>Tủ ấm lắc: <strong id="lblTemp" class="text-slate-300">25.0°C (Tắt)</strong></span>
             <span>Giờ nuôi: <strong id="lblTimeHours" class="text-cyan-400 font-mono text-sm">0.0 giờ</strong></span>
           </div>
 
@@ -206,7 +206,7 @@
             <line x1="0" y1="170" x2="540" y2="170" stroke="#64748b" stroke-width="2.5" />
 
             <!-- PULSING DROP TARGET ZONES -->
-            <!-- Zone 1 & 2: Flask Neck (X=145, Y=74) -->
+            <!-- Zone 1 & 2: Flask Neck on Bench (X=145, Y=74) -->
             <g id="targetZoneFlaskNeck" opacity="1">
               <circle cx="145" cy="74" r="26" fill="#22d3ee" stroke="#22d3ee" stroke-width="2" stroke-dasharray="5,3" class="drop-zone-active" />
               <text id="lblTargetNeck" x="145" y="40" text-anchor="middle" fill="#67e8f9" font-size="9.5" font-weight="bold">
@@ -214,19 +214,19 @@
               </text>
             </g>
 
-            <!-- Zone 3: Incubator Chamber (X=325, Y=100) -->
+            <!-- Zone 3 & 4A: Incubator Chamber / Flask inside Incubator (X=325, Y=100) -->
             <g id="targetZoneIncubator" opacity="0">
               <rect x="278" y="60" width="94" height="68" rx="8" fill="#fbbf24" stroke="#fbbf24" stroke-width="2.2" stroke-dasharray="5,3" class="drop-zone-active" />
-              <text x="325" y="48" text-anchor="middle" fill="#fde047" font-size="9.5" font-weight="bold">
-                ⬇ Kéo Bình thả vào Tủ ấm
+              <text id="lblTargetIncubator" x="325" y="48" text-anchor="middle" fill="#fde047" font-size="9.5" font-weight="bold">
+                ⬇ Kéo Bình đặt vào đây
               </text>
             </g>
 
-            <!-- Zone 4: Cuvette Tube Target for Pouring Broth from Flask (X=393, Y=32) -->
+            <!-- Zone 4B: Cuvette Tube Target for Dispensing Sample from Pipette (X=393, Y=32) -->
             <g id="targetZonePourCuvette" opacity="0">
               <rect x="366" y="8" width="54" height="48" rx="8" fill="#c084fc" stroke="#c084fc" stroke-width="2.2" stroke-dasharray="5,3" class="drop-zone-active" />
               <text x="393" y="10" text-anchor="middle" fill="#e9d5ff" font-size="9" font-weight="bold">
-                ⬇ Kéo Bình rót vào Cuvette
+                ⬇ Kéo Pipet bơm vào Cuvette
               </text>
             </g>
 
@@ -234,7 +234,7 @@
             <g id="targetZoneSpecSlot" opacity="0">
               <rect x="412" y="58" width="40" height="42" rx="6" fill="#34d399" stroke="#34d399" stroke-width="2.2" stroke-dasharray="5,3" class="drop-zone-active" />
               <text x="432" y="50" text-anchor="middle" fill="#6ee7b7" font-size="9.5" font-weight="bold">
-                ⬇ Thả Cuvette vào Máy đo
+                ⬇ Kéo Cuvette đặt vào đây
               </text>
             </g>
 
@@ -242,11 +242,7 @@
             <g id="svgIncubatorGroup" transform="translate(270, 46)">
               <rect x="0" y="12" width="110" height="110" rx="8" fill="#1e293b" stroke="#64748b" stroke-width="2" />
               <rect id="svgIncubatorWindow" x="10" y="22" width="90" height="66" rx="5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5" />
-              <rect id="svgShakerTray" x="18" y="78" width="74" height="5" rx="2" fill="#475569" />
-              <g id="svgMiniFlaskInside" opacity="0" transform="translate(43, 42)">
-                <polygon points="8,8 16,8 24,35 0,35" fill="rgba(226,232,240,0.35)" stroke="#cbd5e1" stroke-width="1.3" />
-                <polygon id="svgMiniFlaskLiquid" points="4,22 20,22 23,34 1,34" fill="rgba(234,179,8,0.65)" />
-              </g>
+              <rect id="svgShakerTray" x="18" y="82" width="74" height="5" rx="2" fill="#475569" />
               <rect x="10" y="96" width="90" height="18" rx="3" fill="#090d16" />
               <circle id="svgIncubatorLed" cx="20" cy="105" r="3.5" fill="#64748b" />
               <text id="svgIncubatorTemp" x="94" y="109" text-anchor="end" fill="#22d3ee" font-size="9.5" font-family="monospace" font-weight="bold">STANDBY</text>
@@ -265,28 +261,24 @@
               <text x="59" y="128" text-anchor="middle" fill="#e2e8f0" font-size="10.5" font-weight="bold">Máy quang phổ</text>
             </g>
 
-            <!-- Pouring Liquid Stream Effect when Flask pours into Cuvette -->
-            <line id="svgPourStream" x1="393" y1="12" x2="393" y2="38" stroke="#eab308" stroke-width="3.5" stroke-linecap="round" opacity="0" />
-
-            <!-- DRAGGABLE ITEM 4: Cuvette Sample (Starts EMPTY until Flask pours broth into it!) -->
+            <!-- DRAGGABLE ITEM 4: Cuvette Sample (Starts EMPTY until Pipette transfers broth from Flask in Incubator into it!) -->
             <g id="svgCuvetteSample" class="draggable-item" transform="translate(382, 16)">
               <rect x="-10" y="-12" width="42" height="50" rx="6" fill="rgba(15, 23, 42, 0.45)" stroke="#334155" stroke-width="1" />
               <rect x="2" y="2" width="18" height="28" rx="2" fill="rgba(56, 189, 248, 0.25)" stroke="#7dd3fc" stroke-width="1.6" />
-              <!-- Liquid inside Cuvette (hidden when empty, visible after pouring from Flask) -->
               <rect id="svgCuvetteLiquid" x="4" y="11" width="14" height="17" fill="rgba(234, 179, 8, 0.45)" opacity="0" style="transition: opacity 0.3s ease;" />
               <text id="lblCuvetteHint" x="11" y="-3" text-anchor="middle" fill="#cbd5e1" font-size="8.5" font-weight="bold">Cuvette (Rỗng)</text>
             </g>
 
-            <!-- DRAGGABLE ITEM 3: Erlenmeyer Flask (Bình tam giác - Kéo vào Tủ ấm ở Bước 3, Kéo rót vào Cuvette ở Bước 4) -->
+            <!-- DRAGGABLE ITEM 3: Erlenmeyer Flask (Starts on bench at 105,62; placed inside Incubator at 301,64 in Step 3) -->
             <g id="svgFlaskGroup" class="draggable-item" transform="translate(105, 62)">
               <rect x="-4" y="-8" width="88" height="128" fill="transparent" />
               <circle id="svgNeckHeatGlow" cx="40" cy="14" r="22" fill="rgba(251, 146, 60, 0.55)" opacity="0" />
               <g id="svgSterilizeBarGroup" opacity="0" transform="translate(10, -18)">
                 <rect x="0" y="0" width="60" height="7" rx="3" fill="#0f172a" stroke="#475569" stroke-width="1" />
                 <rect id="svgSterilizeFill" x="0" y="0" width="0" height="7" rx="3" fill="#f97316" />
-                <text x="30" y="-3" text-anchor="middle" fill="#fdba74" font-size="8" font-weight="bold">Đang hơ lửa...</text>
+                <text x="30" y="-3" text-anchor="middle" fill="#fdba74" font-size="8" font-weight="bold">Đang hơ...</text>
               </g>
-              <g id="svgFlaskInnerBody" style="transition: transform 0.3s ease;">
+              <g id="svgFlaskInnerBody" style="transition: transform 0.25s ease;">
                 <g id="svgFlaskCap" style="transition: all 0.35s ease;">
                   <rect x="29" y="0" width="22" height="15" rx="5" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5" />
                 </g>
@@ -308,14 +300,16 @@
               <text id="lblFlaskAction" x="40" y="122" text-anchor="middle" fill="#e2e8f0" font-size="10.5" font-weight="bold">Bình tam giác</text>
             </g>
 
-            <!-- DRAGGABLE ITEM 2: Micropipette -->
+            <!-- DRAGGABLE ITEM 2: Micropipette (Used in Step 2 to inoculate Flask, AND in Step 4 to aspirate from Flask in Incubator & dispense into Cuvette!) -->
             <g id="svgPipetteGroup" class="draggable-item" transform="translate(205, 42)">
               <rect x="-4" y="-12" width="48" height="115" fill="transparent" />
               <rect x="16" y="0" width="14" height="10" rx="2" fill="#0284c7" />
               <rect x="18" y="10" width="10" height="34" rx="3" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-              <polygon points="19,44 27,44 24.5,80 21.5,80" fill="#38bdf8" stroke="#0284c7" stroke-width="0.8" />
+              <polygon id="svgPipetteTipCone" points="19,44 27,44 24.5,80 21.5,80" fill="#38bdf8" stroke="#0284c7" stroke-width="0.8" />
+              <!-- Liquid inside Pipette tip -->
+              <polygon id="svgPipetteLiquidInside" points="20.2,58 25.8,58 24.5,80 21.5,80" fill="#eab308" opacity="0" />
               <circle id="svgPipetteDrop" cx="23" cy="84" r="4.2" fill="#22d3ee" opacity="0.85" />
-              <text x="23" y="-4" text-anchor="middle" fill="#38bdf8" font-size="9" font-weight="bold">✋ Kéo Pipet</text>
+              <text id="lblPipetteAction" x="23" y="-4" text-anchor="middle" fill="#38bdf8" font-size="9" font-weight="bold">✋ Kéo Pipet</text>
               <text x="23" y="142" text-anchor="middle" fill="#e2e8f0" font-size="10.5" font-weight="bold">Micropipet</text>
             </g>
 
@@ -345,7 +339,6 @@
           </div>
 
           <div class="flex flex-col sm:flex-row items-center gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800">
-            <!-- Live High-Contrast Cuvette Tube with Black Sight-Bars Behind It -->
             <div class="flex items-center gap-3 pr-3 sm:border-r border-slate-800 shrink-0">
               <div class="relative w-14 h-24 rounded-b-2xl rounded-t-md border-2 border-slate-300 bg-white overflow-hidden shadow-md flex flex-col justify-end">
                 <div class="absolute inset-0 flex flex-col justify-evenly px-1.5 py-2.5">
@@ -361,12 +354,11 @@
                 <span class="text-[10px] text-cyan-300 uppercase font-bold block">Ống mẫu tại bình</span>
                 <div class="font-mono font-bold text-white text-sm" id="lblTubeTime">t = 0.0 giờ</div>
                 <div class="text-[11px] text-slate-400 leading-snug max-w-[135px]">
-                  Kéo Bình tam giác rót dịch vào Cuvette rồi đưa vào máy để đo OD600!
+                  Dùng Pipet hút mẫu từ bình trong tủ ấm chuyển sang Cuvette rồi đưa vào máy đo!
                 </div>
               </div>
             </div>
 
-            <!-- Horizontal Rack of Sampled Test Tubes at Every OD Measurement -->
             <div class="flex-1 w-full overflow-x-auto">
               <div class="text-[11px] text-slate-300 mb-1.5 font-semibold">
                 Giá ống nghiệm lưu mẫu sau mỗi lần đo OD (Click vào ống để đối chiếu):
@@ -387,7 +379,7 @@
               <button id="btnPlayPauseTime" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white transition">
                 Tự động chạy
               </button>
-              <button id="btnAdvance2h" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition" title="Tăng 2 giờ, rót mẫu vào Cuvette và đo OD">
+              <button id="btnAdvance2h" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition" title="Tăng 2 giờ, hút mẫu vào Cuvette và đo OD">
                 +2 giờ & Đo OD ngay
               </button>
             </div>
@@ -411,7 +403,7 @@
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-sm font-bold text-white">Đồ Thị Mật Độ Quang Học (OD600) Theo Thời Gian</h3>
-            <p class="text-[11px] text-slate-400">Điểm đo xuất hiện sau khi học sinh rót mẫu vào Cuvette và đưa vào máy đo</p>
+            <p class="text-[11px] text-slate-400">Điểm đo xuất hiện sau khi học sinh hút mẫu vào Cuvette và đưa vào máy đo</p>
           </div>
           <div class="text-right">
             <span class="text-[10px] text-slate-400 block">Máy đo OD600</span>
@@ -450,7 +442,7 @@
 
     </section>
 
-    <!-- RIGHT COLUMN: SCENE 2 (Micro 3D Single-Rod Bacteria + Floating Environmental Control Panel WITHOUT Teacher Spoilers) -->
+    <!-- RIGHT COLUMN: SCENE 2 (Clean Unobstructed 3D Viewport + Dedicated Environmental Control Card Below + Snapshot Gallery) -->
     <section id="panelMicro" class="lg:col-span-6 flex flex-col gap-4">
       
       <!-- 3D Viewport Card -->
@@ -459,13 +451,11 @@
           <div>
             <span class="text-[11px] uppercase tracking-wider font-semibold text-cyan-400">Scene 2 • Kính hiển vi 3D thực tế (Three.js)</span>
             <h2 class="text-base font-bold text-white flex items-center gap-2">
-              Quần Thể Vi Khuẩn Đơn Bào & Tác Động Của Yếu Tố Vật Lí
+              Quần Thể Vi Khuẩn Đơn Bào 3D
             </h2>
           </div>
 
-          <!-- Quick Time Milestone Jump Buttons -->
-          <div class="flex flex-wrap items-center gap-1">
-            <span class="text-[11px] text-slate-400 mr-1">Mốc giờ:</span>
+          <div class="flex flex-wrap items-center gap-1.5">
             <button data-hour="2" class="btn-milestone px-2.5 py-1 rounded-lg text-xs font-semibold bg-cyan-600 text-white">
               t = 2h
             </button>
@@ -478,109 +468,80 @@
             <button data-hour="22" class="btn-milestone px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300">
               t = 22h
             </button>
+            <button id="btnShowPrototypeCode" class="ml-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow transition">
+              Code Scene 2
+            </button>
           </div>
         </div>
 
-        <!-- 3D Canvas Container with Floating Environmental Control Panel Overlay (No teacher spoilers!) -->
-        <div id="threeContainer" class="relative w-full h-[430px] sm:h-[460px] rounded-xl overflow-hidden bg-slate-950 border border-slate-800 cursor-grab active:cursor-grabbing">
+        <!-- UNOBSTRUCTED 3D CANVAS CONTAINER -->
+        <div id="threeContainer" class="relative w-full h-[380px] sm:h-[410px] rounded-xl overflow-hidden bg-slate-950 border border-slate-800 cursor-grab active:cursor-grabbing">
           
-          <!-- TOP-LEFT: Pure Numeric Telemetry HUD (Zero biological cause/effect spoilers) -->
-          <div class="absolute top-3 left-3 z-10 pointer-events-none flex flex-col gap-1.5 bg-slate-900/85 backdrop-blur-md p-2.5 rounded-xl border border-slate-700/80 text-xs shadow-lg">
-            <div class="text-[11px] font-bold text-cyan-300 border-b border-slate-700 pb-1 mb-0.5">
-              Thời điểm: <span id="hudTimeLabel" class="font-mono text-white">0.0h</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span>
-              <span class="text-slate-300">Tế bào quan sát được: <strong id="hudLiveCells" class="text-white font-mono">8</strong></span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>
-              <span class="text-slate-300">Hạt dinh dưỡng: <strong id="hudNutrients" class="text-white font-mono">95%</strong></span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
-              <span class="text-slate-300">Phân tử độc hại: <strong id="hudToxins" class="text-white font-mono">2%</strong></span>
-            </div>
+          <!-- Compact Top-Left Counter Pill -->
+          <div class="absolute top-3 left-3 z-10 pointer-events-none flex items-center gap-3 bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700/70 text-xs shadow">
+            <span class="font-bold text-cyan-300 font-mono" id="hudTimeLabel">0.0h</span>
+            <span class="text-slate-300">Tế bào: <strong id="hudLiveCells" class="text-white font-mono">8</strong></span>
+            <span class="text-emerald-300">Dinh dưỡng: <strong id="hudNutrients" class="font-mono">95%</strong></span>
+            <span class="text-rose-400">Độc tố: <strong id="hudToxins" class="font-mono">2%</strong></span>
           </div>
 
-          <!-- TOP-RIGHT: FLOATING UI ENVIRONMENTAL CONTROL PANEL (Pure numeric values only so teacher can question students!) -->
-          <div id="envControlPanel" class="absolute top-3 right-3 z-20 w-56 sm:w-60 bg-slate-900/90 backdrop-blur-md p-3 rounded-xl border border-cyan-500/40 shadow-2xl flex flex-col gap-2.5 text-xs">
-            <div class="flex items-center justify-between border-b border-slate-700/80 pb-1.5">
-              <span class="text-[11px] uppercase tracking-wider font-bold text-cyan-300">Biến số môi trường</span>
-              <button id="btnResetEnv" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[10px] text-cyan-300 border border-slate-600 transition" title="Đặt lại 37°C, pH 7.0, Tắt UV">
-                Mặc định
-              </button>
-            </div>
+          <!-- Top-Right Snapshot Button -->
+          <div class="absolute top-3 right-3 z-10">
+            <button id="btnCaptureSnapshot" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg border border-emerald-400/50 flex items-center gap-1.5 transition transform active:scale-95">
+              <span>📸 Chụp ảnh 3D</span>
+            </button>
+          </div>
+        </div>
 
-            <!-- 1. Temperature Slider (0°C - 100°C) - Pure numbers only -->
-            <div class="space-y-1">
-              <div class="flex justify-between items-center text-[11px]">
+        <!-- DEDICATED ENVIRONMENTAL CONTROL PANEL IN THE FRAME BELOW THE 3D VIEWPORT -->
+        <div id="envControlPanel" class="bg-slate-900/95 p-3.5 rounded-xl border border-cyan-500/40 shadow-lg flex flex-col gap-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <span class="text-xs uppercase tracking-wider font-bold text-cyan-300">Bảng Điều Khiển Biến Số Môi Trường (Tác Động Lên Vi Khuẩn 3D)</span>
+            <button id="btnResetEnv" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-cyan-300 border border-slate-600 transition font-medium">
+              Đặt lại mặc định (37°C • pH 7.0)
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center">
+            <!-- 1. Temperature Slider (0°C - 100°C) -->
+            <div class="bg-slate-950/90 p-2.5 rounded-lg border border-slate-800 space-y-1.5">
+              <div class="flex justify-between items-center text-xs">
                 <label for="sliderEnvTemp" class="font-semibold text-slate-200">🌡️ Nhiệt độ:</label>
                 <span id="lblEnvTempVal" class="font-mono font-bold text-cyan-300">37°C</span>
               </div>
               <input id="sliderEnvTemp" type="range" min="0" max="100" step="1" value="37" class="w-full cursor-pointer h-1.5 rounded-lg">
-              <div class="flex justify-between text-[9px] text-slate-400 font-mono">
+              <div class="flex justify-between text-[10px] text-slate-400 font-mono">
                 <span>0°C</span>
                 <span>37°C</span>
                 <span>100°C</span>
               </div>
             </div>
 
-            <!-- 2. pH Level Slider (1 - 14) - Pure numbers only -->
-            <div class="space-y-1">
-              <div class="flex justify-between items-center text-[11px]">
+            <!-- 2. pH Level Slider (1 - 14) -->
+            <div class="bg-slate-950/90 p-2.5 rounded-lg border border-slate-800 space-y-1.5">
+              <div class="flex justify-between items-center text-xs">
                 <label for="sliderEnvPH" class="font-semibold text-slate-200">🧪 Độ pH:</label>
                 <span id="lblEnvPHVal" class="font-mono font-bold text-cyan-300">pH 7.0</span>
               </div>
               <input id="sliderEnvPH" type="range" min="1" max="14" step="0.5" value="7.0" class="w-full cursor-pointer h-1.5 rounded-lg">
-              <div class="flex justify-between text-[9px] text-slate-400 font-mono">
+              <div class="flex justify-between text-[10px] text-slate-400 font-mono">
                 <span>1.0</span>
                 <span>7.0</span>
                 <span>14.0</span>
               </div>
             </div>
 
-            <!-- 3. UV Radiation Toggle Button - Pure ON/OFF only -->
-            <div class="pt-1 border-t border-slate-800 flex items-center justify-between gap-2">
-              <button id="btnToggleUV" class="w-full py-1.5 px-2.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-purple-200 border border-purple-500/40 transition flex items-center justify-center gap-1.5">
-                <span>☢️ Bức xạ tia UV:</span>
+            <!-- 3. UV Radiation Toggle Button -->
+            <div class="bg-slate-950/90 p-2.5 rounded-lg border border-slate-800 flex flex-col justify-between h-full">
+              <span class="text-xs font-semibold text-slate-200 block mb-1.5">☢️ Bức xạ tử ngoại:</span>
+              <button id="btnToggleUV" class="w-full py-2 px-3 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-purple-200 border border-purple-500/40 transition flex items-center justify-center gap-1.5">
+                <span>Tia UV:</span>
                 <span id="lblUVStatus" class="text-slate-300">TẮT</span>
               </button>
             </div>
           </div>
-
-          <!-- BOTTOM-LEFT: Camera Snapshot Action Button Overlay -->
-          <div class="absolute bottom-10 left-3 z-10 flex items-center gap-2">
-            <button id="btnCaptureSnapshot" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg border border-emerald-400/50 flex items-center gap-1.5 transition transform active:scale-95">
-              <span>📸 Chụp ảnh vi trường 3D</span>
-            </button>
-          </div>
-
-          <!-- BOTTOM BAR: Legend & Orbit Hint -->
-          <div class="absolute bottom-2 left-3 right-3 z-10 pointer-events-none flex flex-wrap items-center justify-between gap-2 text-[10px]">
-            <div class="bg-slate-900/85 px-2 py-0.5 rounded border border-slate-800 text-slate-300">
-              <strong class="text-sky-300">Chú giải hạt:</strong> Hạt xanh lục = Dinh dưỡng • Hạt đa diện đỏ = Độc tố
-            </div>
-            <div class="bg-slate-900/85 px-2 py-0.5 rounded border border-slate-800 text-slate-400">
-              Kéo chuột xoay 3D • Cuộn chuột thu phóng
-            </div>
-          </div>
         </div>
 
-        <!-- Neutral Inquiry Prompt for Students & Prototype Code Button (Zero spoilers!) -->
-        <div class="bg-slate-900/90 rounded-xl p-3 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div class="space-y-1">
-            <h4 class="text-xs font-bold text-cyan-300 uppercase tracking-wide">
-              Câu Hỏi Quan Sát Dành Cho Học Sinh (Scene 2)
-            </h4>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              Hãy quan sát sự thay đổi về <strong>số lượng, màu sắc, hình dạng và tốc độ chuyển động</strong> của các tế bào vi khuẩn khi thay đổi thời gian nuôi cấy hoặc điều chỉnh Nhiệt độ, Độ pH và Tia UV để giải thích cơ chế sinh học!
-            </p>
-          </div>
-          <button id="btnShowPrototypeCode" class="shrink-0 px-3 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow transition">
-            Xem & Copy Code Scene 2
-          </button>
-        </div>
       </div>
 
       <!-- CAPTURED SNAPSHOTS COMPARISON GALLERY -->
@@ -594,12 +555,12 @@
               </span>
             </h3>
             <p class="text-[11px] text-slate-400">
-              Chụp ảnh ở các mốc thời gian hoặc điều kiện Nhiệt độ / pH / Tia UV khác nhau để học sinh tự ghi nhận xét
+              Chụp ảnh ở các mốc thời gian hoặc điều kiện Nhiệt độ / pH / Tia UV khác nhau để đối chiếu
             </p>
           </div>
           <div class="flex items-center gap-2">
             <button id="btnAutoCapture4Moments" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-cyan-950/90 hover:bg-cyan-900 text-cyan-200 border border-cyan-700/60 transition">
-              Chụp nhanh 4 mốc (2h, 8h, 15h, 22h)
+              Chụp nhanh các mốc điển hình
             </button>
             <button id="btnClearSnapshots" class="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
               Xoá tất cả ảnh
@@ -608,7 +569,7 @@
         </div>
 
         <div id="snapshotEmptyState" class="py-6 text-center text-xs text-slate-400 bg-slate-950/60 rounded-xl border border-dashed border-slate-800">
-          Chưa có ảnh chụp nào. Hãy nhấn <strong>"📸 Chụp ảnh vi trường 3D"</strong> để lưu ảnh kèm thông số tại đây!
+          Chưa có ảnh chụp nào. Hãy nhấn <strong>"📸 Chụp ảnh 3D"</strong> để lưu ảnh kèm thông số tại đây!
         </div>
         <div id="snapshotGalleryGrid" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3">
         </div>
@@ -639,13 +600,13 @@
     </div>
   </div>
 
-  <!-- Modal 2: Copyable Standalone Prototype Code (Clean UI without spoilers for students) -->
+  <!-- Modal 2: Copyable Standalone Prototype Code -->
   <div id="modalPrototypeCode" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="glass-panel rounded-2xl max-w-4xl w-full max-h-[88vh] flex flex-col border border-slate-700 shadow-2xl overflow-hidden">
       <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-800 bg-slate-900">
         <div>
-          <h3 class="text-sm font-bold text-white">Mã Nguồn Scene 2: Bảng Điều Khiển Nhiệt Độ, pH, Tia UV (Đã Ẩn Đáp Án Trên Giao Diện)</h3>
-          <p class="text-xs text-slate-400">Giao diện chỉ hiện con số để Giáo viên đặt câu hỏi cho Học sinh; bên trong code có ghi chú vị trí đổi mã màu/ngưỡng</p>
+          <h3 class="text-sm font-bold text-white">Mã Nguồn Scene 2: Mô Phỏng 3D & Bảng Điều Khiển Môi Trường Đặt Ở Khung Dưới</h3>
+          <p class="text-xs text-slate-400">Khung điều khiển nằm gọn bên dưới màn hình 3D, không che khuất vi khuẩn và không lộ đáp án</p>
         </div>
         <div class="flex items-center gap-2">
           <button id="btnCopySnippet" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition">
@@ -700,7 +661,8 @@
       capOpened: false,
       inoculated: false,
       incubating: false,
-      cuvetteFilled: false, // Bước 4 mới: Phải kéo Bình tam giác rót dịch vào Cuvette trước khi đo OD!
+      pipetteHasSample: false, // Bước 4A: Đã kéo Pipet hút mẫu từ bình trong tủ ấm lắc
+      cuvetteFilled: false,    // Bước 4B: Đã kéo Pipet bơm mẫu vừa hút sang Cuvette
       timeHours: 0.0,
       autoPlaying: false,
       sampledPoints: [
@@ -1157,7 +1119,7 @@
     let targetRotY = 0.25, targetRotX = 0.12;
 
     threeContainer.addEventListener('pointerdown', (e) => {
-      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('#envControlPanel')) return;
+      if (e.target.closest('button')) return;
       isDragging3D = true;
       prevMouse = { x: e.clientX, y: e.clientY };
     });
@@ -1171,7 +1133,6 @@
       prevMouse = { x: e.clientX, y: e.clientY };
     });
     threeContainer.addEventListener('wheel', (e) => {
-      if (e.target.closest('#envControlPanel')) return;
       e.preventDefault();
       camera.position.z = Math.max(7.5, Math.min(26, camera.position.z + e.deltaY * 0.01));
     }, { passive: false });
@@ -1184,10 +1145,6 @@
       renderer.setSize(rect.width, rect.height);
     }
 
-    // ====================================================================================
-    // HÀM KIỂM TRA BIẾN SỐ MÔI TRƯỜNG: checkEnvironmentalFactors()
-    // Chỉ thực hiện hiệu ứng thị giác 3D, không hiển thị chữ giải thích đáp án trên màn hình
-    // ====================================================================================
     function checkEnvironmentalFactors(timeSec, dt) {
       const temp = simState.envTemp;
       const ph = simState.envPH;
@@ -1407,7 +1364,6 @@
       });
     }
 
-    // Cập nhật chỉ số trên Bảng điều khiển biến số môi trường (Chỉ hiển thị số, không lộ giải thích của GV)
     function syncEnvironmentalControlUI() {
       const temp = simState.envTemp;
       const ph = simState.envPH;
@@ -1576,7 +1532,24 @@
 
     // ==========================================
     // 6. UI SYNCHRONIZATION & 5-STEP DRAG-AND-DROP WORKFLOW
+    // Step 1: Kéo lửa hơ miệng bình
+    // Step 2: Kéo Pipet có giống vào miệng bình
+    // Step 3: Kéo Bình đặt vào Tủ ấm lắc
+    // Step 4: Kéo Pipet hút mẫu từ bình tam giác trong tủ ấm lắc -> rồi kéo Pipet bơm sang Cuvette
+    // Step 5: Kéo Cuvette đặt vào Máy quang phổ
     // ==========================================
+    function getFlaskHomePosition() {
+      if (simState.incubating) {
+        return { x: 301, y: 64, scale: 0.58 };
+      }
+      return { x: 105, y: 62, scale: 1.0 };
+    }
+
+    function applyFlaskTransform(x, y, scale, shakeOffset = 0) {
+      const flaskGroup = document.getElementById('svgFlaskGroup');
+      flaskGroup.setAttribute('transform', `translate(${(x + shakeOffset).toFixed(1)}, ${y.toFixed(1)}) scale(${scale})`);
+    }
+
     function updateStepCardsAndDropZones() {
       const c1 = document.getElementById('stepCard1');
       const c2 = document.getElementById('stepCard2');
@@ -1597,34 +1570,43 @@
       const zNeck = document.getElementById('targetZoneFlaskNeck');
       const lblNeck = document.getElementById('lblTargetNeck');
       const zInc = document.getElementById('targetZoneIncubator');
+      const lblInc = document.getElementById('lblTargetIncubator');
       const zPour = document.getElementById('targetZonePourCuvette');
       const zSpec = document.getElementById('targetZoneSpecSlot');
 
       if (!simState.capOpened) {
         zNeck.setAttribute('opacity', '1');
-        lblNeck.textContent = simState.burnerLit ? '⬇ Kéo ngọn lửa hơ vào đây!' : '⬇ Bật đèn rồi kéo lửa vào đây';
+        lblNeck.textContent = simState.burnerLit ? '⬇ Kéo lửa hơ vào đây!' : '⬇ Bật đèn rồi kéo lửa vào đây';
         zInc.setAttribute('opacity', '0');
         zPour.setAttribute('opacity', '0');
         zSpec.setAttribute('opacity', '0');
       } else if (!simState.inoculated) {
         zNeck.setAttribute('opacity', '1');
-        lblNeck.textContent = '⬇ Kéo đầu Pipet thả vào đây!';
+        lblNeck.textContent = '⬇ Kéo Pipet có giống vào đây!';
         zInc.setAttribute('opacity', '0');
         zPour.setAttribute('opacity', '0');
         zSpec.setAttribute('opacity', '0');
       } else if (!simState.incubating) {
         zNeck.setAttribute('opacity', '0');
         zInc.setAttribute('opacity', '1');
+        lblInc.textContent = '⬇ Kéo Bình đặt vào Tủ ấm lắc';
         zPour.setAttribute('opacity', '0');
         zSpec.setAttribute('opacity', '0');
-      } else if (!simState.cuvetteFilled) {
-        // Bước 4: Yêu cầu kéo Bình tam giác rót dịch vào Cuvette
+      } else if (!simState.pipetteHasSample && !simState.cuvetteFilled) {
+        // Bước 4 (Giai đoạn 1): Kéo Pipet đến Bình tam giác trong Tủ ấm lắc để hút mẫu
+        zNeck.setAttribute('opacity', '0');
+        zInc.setAttribute('opacity', '1');
+        lblInc.textContent = '⬇ Kéo Pipet hút mẫu từ bình';
+        zPour.setAttribute('opacity', '0');
+        zSpec.setAttribute('opacity', '0');
+      } else if (simState.pipetteHasSample && !simState.cuvetteFilled) {
+        // Bước 4 (Giai đoạn 2): Kéo Pipet (đã hút đầy mẫu) sang bơm vào Cuvette
         zNeck.setAttribute('opacity', '0');
         zInc.setAttribute('opacity', '0');
         zPour.setAttribute('opacity', '1');
         zSpec.setAttribute('opacity', '0');
       } else {
-        // Bước 5: Cuvette đã có dịch -> Kéo Cuvette thả vào Máy đo OD
+        // Bước 5: Kéo Cuvette đặt vào Máy quang phổ
         zNeck.setAttribute('opacity', '0');
         zInc.setAttribute('opacity', '0');
         zPour.setAttribute('opacity', '0');
@@ -1642,7 +1624,6 @@
       document.getElementById('sliderTime').value = t;
 
       document.getElementById('svgFlaskLiquid').setAttribute('fill', tv.rgba);
-      document.getElementById('svgMiniFlaskLiquid').setAttribute('fill', tv.rgba);
       document.getElementById('svgCuvetteLiquid').setAttribute('fill', tv.rgba);
       document.getElementById('svgFlaskParticles').setAttribute('opacity', Math.min(0.95, od).toFixed(2));
 
@@ -1662,7 +1643,7 @@
 
       document.getElementById('hudTimeLabel').textContent = t.toFixed(1) + 'h';
       document.getElementById('hudNutrients').textContent = Math.round(bio.nutrientRatio * 100) + '%';
-      document.getElementById('hudToxins').textContent = Math.round(bio.toxinRatio * 100) + '%';
+      document.getElementById('hudToxins').textContent = Math.round(bio.toxinRatio * 0.99 * 100) + '%';
 
       document.getElementById('lblSampleCount').textContent =
         `Bảng kết quả đo OD & Hình ảnh độ đục (${simState.sampledPoints.length} mẫu)`;
@@ -1679,7 +1660,7 @@
       document.getElementById('svgFlame').setAttribute('opacity', lit ? '1' : '0.15');
       document.getElementById('svgBurnerKnob').setAttribute('fill', lit ? '#22c55e' : '#ef4444');
       document.getElementById('lblBurnerAction').textContent = lit ? '🔥 Kéo đèn hơ miệng bình!' : '🔥 Click bật lửa';
-      document.getElementById('lblAseptic').textContent = lit ? 'Đang bật lửa (Hãy kéo đèn)' : 'Đang tắt';
+      document.getElementById('lblAseptic').textContent = lit ? 'Đang bật lửa' : 'Đang tắt';
       document.getElementById('lblAseptic').className = lit ? 'text-cyan-300 font-bold' : 'text-amber-400';
       updateStepCardsAndDropZones();
     }
@@ -1688,7 +1669,7 @@
       setBurnerFlame(!simState.burnerLit);
     });
 
-    // Bước 1: Hơ lửa mở nắp bình tam giác
+    // Bước 1: Kéo lửa hơ miệng bình
     function completeStep1SterilizeNeck() {
       if (simState.capOpened) return;
       if (!simState.burnerLit) setBurnerFlame(true);
@@ -1699,27 +1680,27 @@
       document.getElementById('svgSterilizeFill').setAttribute('width', '60');
       document.getElementById('svgNeckHeatGlow').setAttribute('opacity', '1');
       document.getElementById('svgFlaskCap').setAttribute('transform', 'translate(28, -20) rotate(32)');
-      document.getElementById('lblBurnerAction').textContent = '✓ Đã khử trùng';
+      document.getElementById('lblBurnerAction').textContent = '✓ Đã hơ lửa';
 
       setTimeout(() => {
         document.getElementById('svgNeckHeatGlow').setAttribute('opacity', '0');
         document.getElementById('svgSterilizeBarGroup').setAttribute('opacity', '0');
       }, 900);
 
-      document.getElementById('lblAseptic').textContent = 'Đã khử trùng miệng bình ✓';
+      document.getElementById('lblAseptic').textContent = 'Đã hơ miệng bình ✓';
       document.getElementById('lblAseptic').className = 'text-emerald-400 font-bold';
-      document.getElementById('statusStep1').textContent = '✅ Đã mở nắp';
-      document.getElementById('statusStep1').className = 'text-[9.5px] text-emerald-300 font-bold mt-1';
-      document.getElementById('statusStep2').textContent = '⏳ Kéo Pipet vào';
-      document.getElementById('statusStep2').className = 'text-[9.5px] text-amber-300 font-semibold mt-1';
+      document.getElementById('statusStep1').textContent = '✅ Đã hoàn thành';
+      document.getElementById('statusStep1').className = 'text-[9px] text-emerald-300 font-bold mt-1';
+      document.getElementById('statusStep2').textContent = '⏳ Đang chờ kéo...';
+      document.getElementById('statusStep2').className = 'text-[9px] text-amber-300 font-semibold mt-1';
 
       document.getElementById('labStatusBadge').textContent = 'Bước 2 / 5';
       document.getElementById('labInstructionText').innerHTML =
-        '👉 <strong>Bước 2 (Cấy giống):</strong> Nhấn giữ chuột <strong>kéo Micropipet</strong> đưa đầu giọt giống vi khuẩn thả vào vòng tròn <strong>Miệng bình tam giác</strong>!';
+        '👉 <strong>Bước 2:</strong> Nhấn giữ chuột <strong>kéo Pipet có giống vào miệng bình tam giác</strong>.';
       updateStepCardsAndDropZones();
     }
 
-    // Bước 2: Kéo Pipet cấy giống vào bình
+    // Bước 2: Kéo Pipet có giống vào miệng bình
     function completeStep2Pipette() {
       if (!simState.capOpened || simState.inoculated) return;
       simState.inoculated = true;
@@ -1735,79 +1716,111 @@
         document.getElementById('svgFlaskCap').setAttribute('transform', 'translate(0, 0)');
       }, 650);
 
-      document.getElementById('statusStep2').textContent = '✅ Đã cấy giống';
-      document.getElementById('statusStep2').className = 'text-[9.5px] text-emerald-300 font-bold mt-1';
-      document.getElementById('statusStep3').textContent = '⏳ Kéo Bình vào Tủ';
-      document.getElementById('statusStep3').className = 'text-[9.5px] text-amber-300 font-semibold mt-1';
+      document.getElementById('statusStep2').textContent = '✅ Đã hoàn thành';
+      document.getElementById('statusStep2').className = 'text-[9px] text-emerald-300 font-bold mt-1';
+      document.getElementById('statusStep3').textContent = '⏳ Đang chờ kéo...';
+      document.getElementById('statusStep3').className = 'text-[9px] text-amber-300 font-semibold mt-1';
 
       document.getElementById('labStatusBadge').textContent = 'Bước 3 / 5';
       document.getElementById('labInstructionText').innerHTML =
-        '👉 <strong>Bước 3 (Ủ ấm 37°C):</strong> Hãy nhấn giữ chuột <strong>kéo Bình tam giác</strong> thả vào ô sáng của <strong>Tủ ấm lắc 37°C</strong>!';
+        '👉 <strong>Bước 3:</strong> Nhấn giữ chuột <strong>kéo Bình tam giác đặt vào Tủ ấm lắc 37°C</strong>.';
       updateStepCardsAndDropZones();
     }
 
-    // Bước 3: Kéo Bình tam giác đặt vào Tủ ấm 37°C
+    // Bước 3: Kéo Bình đặt vào Tủ ấm lắc
     function completeStep3Incubate() {
       if (!simState.inoculated || simState.incubating) return;
       simState.incubating = true;
       playTone(820, 0.15, 'sine');
 
+      const home = getFlaskHomePosition();
+      applyFlaskTransform(home.x, home.y, home.scale, 0);
+      document.getElementById('lblFlaskAction').textContent = 'Bình đang ủ';
+      document.getElementById('lblFlaskAction').setAttribute('fill', '#fde047');
+
       document.getElementById('svgIncubatorWindow').setAttribute('fill', 'rgba(6, 182, 212, 0.22)');
-      document.getElementById('svgMiniFlaskInside').setAttribute('opacity', '1');
       document.getElementById('svgIncubatorLed').setAttribute('fill', '#10b981');
       document.getElementById('svgIncubatorTemp').textContent = '37.0°C • 200rpm';
       document.getElementById('lblTemp').textContent = '37.0°C (Đang ủ lắc)';
       document.getElementById('lblTemp').className = 'text-emerald-400 font-bold';
 
-      document.getElementById('statusStep3').textContent = '✅ Đang ủ 37°C';
-      document.getElementById('statusStep3').className = 'text-[9.5px] text-emerald-300 font-bold mt-1';
-      document.getElementById('statusStep4').textContent = '⏳ Kéo Bình rót Cuvette';
-      document.getElementById('statusStep4').className = 'text-[9.5px] text-purple-300 font-semibold mt-1';
+      document.getElementById('statusStep3').textContent = '✅ Đã hoàn thành';
+      document.getElementById('statusStep3').className = 'text-[9px] text-emerald-300 font-bold mt-1';
+      document.getElementById('statusStep4').textContent = '⏳ Hút mẫu từ bình';
+      document.getElementById('statusStep4').className = 'text-[9px] text-purple-300 font-semibold mt-1';
 
       document.getElementById('labStatusBadge').textContent = 'Bước 4 / 5';
       document.getElementById('labInstructionText').innerHTML =
-        '👉 <strong>Bước 4 (Rót mẫu sang Cuvette):</strong> Hãy nhấn giữ <strong>kéo Bình tam giác</strong> đưa đến <strong>rót dịch nuôi vào ống Cuvette</strong> (ô viền tím phía trên máy quang phổ)!';
+        '👉 <strong>Bước 4 (Hút mẫu):</strong> Hãy nhấn giữ <strong>kéo Micropipet đưa vào Bình tam giác trên Tủ ấm lắc</strong> để hút dịch mẫu, rồi <strong>kéo sang bơm vào ống Cuvette</strong>!';
       updateStepCardsAndDropZones();
     }
 
-    // Bước 4 (MỚI): Kéo Bình tam giác nghiêng rót dịch nuôi cấy vào ống Cuvette
-    function completeStep4PourFlaskIntoCuvette() {
-      if (!simState.incubating) return;
+    // Bước 4A: Kéo Pipet vào Bình tam giác đang ở trong Tủ ấm lắc để hút mẫu dịch nuôi
+    function completeStep4AAspirateFromIncubatorFlask() {
+      if (!simState.incubating || simState.pipetteHasSample) return;
+      simState.pipetteHasSample = true;
+      playTone(760, 0.12, 'sine');
+
+      const pipGroup = document.getElementById('svgPipetteGroup');
+      // Nghiêng mở nhẹ nắp bông bình trong tủ ấm và đưa đầu Pipet vào hút mẫu
+      document.getElementById('svgFlaskCap').setAttribute('transform', 'translate(22, -16) rotate(25)');
+      pipGroup.setAttribute('transform', 'translate(302, 4)');
+
+      // Hiển thị dịch màu vàng đục bên trong đầu côn Pipet và giọt mẫu ở mũi Pipet
+      document.getElementById('svgPipetteLiquidInside').setAttribute('opacity', '0.9');
+      document.getElementById('svgPipetteDrop').setAttribute('fill', '#eab308');
+      document.getElementById('svgPipetteDrop').setAttribute('opacity', '1');
+      document.getElementById('lblPipetteAction').textContent = '✋ Kéo sang Cuvette!';
+      document.getElementById('lblPipetteAction').setAttribute('fill', '#fde047');
+
+      setTimeout(() => {
+        document.getElementById('svgFlaskCap').setAttribute('transform', 'translate(0, 0)');
+        pipGroup.setAttribute('transform', 'translate(205, 42)');
+      }, 550);
+
+      document.getElementById('statusStep4').textContent = '⏳ Bơm vào Cuvette';
+      document.getElementById('statusStep4').className = 'text-[9px] text-amber-300 font-bold mt-1';
+      document.getElementById('labInstructionText').innerHTML =
+        '👉 <strong>Bước 4 (Chuyển vào Cuvette):</strong> Pipet đã hút dịch mẫu từ bình trong tủ ấm! Bây giờ hãy <strong>kéo Micropipet thả vào ống Cuvette</strong> (ô viền tím)!';
+      updateStepCardsAndDropZones();
+    }
+
+    // Bước 4B: Kéo Pipet (đang chứa mẫu vừa hút từ bình trong tủ ấm) thả vào ống Cuvette
+    function completeStep4BDispenseIntoCuvette() {
+      if (!simState.incubating || !simState.pipetteHasSample) return;
+      simState.pipetteHasSample = false;
       simState.cuvetteFilled = true;
-      playTone(790, 0.14, 'sine');
+      playTone(810, 0.14, 'sine');
 
-      const flaskGroup = document.getElementById('svgFlaskGroup');
-      const flaskInner = document.getElementById('svgFlaskInnerBody');
-      const pourStream = document.getElementById('svgPourStream');
+      const pipGroup = document.getElementById('svgPipetteGroup');
+      pipGroup.setAttribute('transform', 'translate(370, -52)');
 
-      // Đặt bình ở góc trên ống Cuvette và nghiêng bình rót dịch
-      flaskGroup.setAttribute('transform', 'translate(325, -28)');
-      flaskInner.setAttribute('transform', 'rotate(48, 40, 20)');
-      pourStream.setAttribute('opacity', '1');
-
-      // Làm đầy dịch bên trong ống Cuvette
+      // Làm đầy dịch bên trong ống Cuvette và làm rỗng đầu Pipet
       document.getElementById('svgCuvetteLiquid').setAttribute('opacity', '1');
+      document.getElementById('svgPipetteLiquidInside').setAttribute('opacity', '0');
+      document.getElementById('svgPipetteDrop').setAttribute('opacity', '0');
+      document.getElementById('lblPipetteAction').textContent = '✋ Kéo Pipet';
+      document.getElementById('lblPipetteAction').setAttribute('fill', '#38bdf8');
+
       document.getElementById('lblCuvetteHint').textContent = '✋ Kéo Cuvette (Đầy)';
       document.getElementById('lblCuvetteHint').setAttribute('fill', '#6ee7b7');
 
       setTimeout(() => {
-        pourStream.setAttribute('opacity', '0');
-        flaskInner.setAttribute('transform', 'rotate(0, 40, 20)');
-        flaskGroup.setAttribute('transform', 'translate(105, 62)');
-      }, 650);
+        pipGroup.setAttribute('transform', 'translate(205, 42)');
+      }, 550);
 
-      document.getElementById('statusStep4').textContent = '✅ Cuvette đã có dịch';
-      document.getElementById('statusStep4').className = 'text-[9.5px] text-emerald-300 font-bold mt-1';
+      document.getElementById('statusStep4').textContent = '✅ Đã hoàn thành';
+      document.getElementById('statusStep4').className = 'text-[9px] text-emerald-300 font-bold mt-1';
       document.getElementById('statusStep5').textContent = '⏳ Kéo Cuvette vào máy';
-      document.getElementById('statusStep5').className = 'text-[9.5px] text-cyan-300 font-semibold mt-1';
+      document.getElementById('statusStep5').className = 'text-[9px] text-cyan-300 font-semibold mt-1';
 
       document.getElementById('labStatusBadge').textContent = 'Bước 5 / 5';
       document.getElementById('labInstructionText').innerHTML =
-        '👉 <strong>Bước 5 (Đo OD600):</strong> Dịch từ bình tam giác đã được chiết sang Cuvette! Bây giờ hãy <strong>kéo ống Cuvette thả vào khe Máy quang phổ</strong> để đo mật độ quang học!';
+        '👉 <strong>Bước 5:</strong> Mẫu đã được chuyển vào Cuvette! Hãy <strong>kéo ống Cuvette đặt vào khe Máy quang phổ</strong>.';
       updateStepCardsAndDropZones();
     }
 
-    // Bước 5: Kéo ống Cuvette (đã chứa dịch) thả vào khe Máy quang phổ để đo OD600
+    // Bước 5: Kéo ống Cuvette đặt vào khe Máy quang phổ
     function completeStep5MeasureOD() {
       playTone(900, 0.1, 'triangle');
 
@@ -1818,13 +1831,13 @@
       setTimeout(() => {
         cuv.setAttribute('transform', 'translate(382, 16)');
         laser.setAttribute('opacity', '0');
-        // Sau khi đo xong 1 mẫu, làm rỗng Cuvette để lần đo ở mốc giờ tiếp theo HS lại rót mẫu mới từ Bình tam giác!
         simState.cuvetteFilled = false;
+        simState.pipetteHasSample = false;
         document.getElementById('svgCuvetteLiquid').setAttribute('opacity', '0');
         document.getElementById('lblCuvetteHint').textContent = 'Cuvette (Rỗng)';
         document.getElementById('lblCuvetteHint').setAttribute('fill', '#cbd5e1');
-        document.getElementById('statusStep4').textContent = '⏳ Rót mẫu mới từ Bình';
-        document.getElementById('statusStep4').className = 'text-[9.5px] text-purple-300 font-semibold mt-1';
+        document.getElementById('statusStep4').textContent = '⏳ Hút mẫu từ bình';
+        document.getElementById('statusStep4').className = 'text-[9px] text-purple-300 font-semibold mt-1';
         updateStepCardsAndDropZones();
       }, 600);
 
@@ -1840,9 +1853,9 @@
       }
 
       document.getElementById('statusStep5').textContent = `✅ Đã đo: ${simState.sampledPoints.length} mẫu`;
-      document.getElementById('statusStep5').className = 'text-[9.5px] text-emerald-300 font-bold mt-1';
+      document.getElementById('statusStep5').className = 'text-[9px] text-emerald-300 font-bold mt-1';
       document.getElementById('labInstructionText').innerHTML =
-        `✅ <strong>Đã ghi nhận OD600 = ${od.toFixed(3)} tại t = ${t.toFixed(1)}h!</strong> Để đo mốc giờ tiếp theo, hãy tăng thanh thời gian rồi <strong>kéo Bình tam giác rót mẫu mới vào Cuvette</strong> và đưa vào máy đo!`;
+        `✅ <strong>Đã ghi nhận OD600 = ${od.toFixed(3)} tại t = ${t.toFixed(1)}h!</strong> Để đo mốc tiếp theo, hãy tăng thời gian rồi <strong>dùng Pipet hút mẫu từ bình trong tủ ấm chuyển sang Cuvette</strong> và đưa vào máy đo!`;
       syncUIAndSimulation();
     }
 
@@ -1860,7 +1873,7 @@
       };
     }
 
-    function beginDrag(e, type, el, homeX, homeY) {
+    function beginDrag(e, type, el, homeX, homeY, scale = 1.0) {
       e.preventDefault();
       e.stopPropagation();
       if (el.setPointerCapture && e.pointerId !== undefined) {
@@ -1873,6 +1886,7 @@
         pointerId: e.pointerId,
         homeX,
         homeY,
+        scale,
         startX: pt.x,
         startY: pt.y,
         curX: homeX,
@@ -1884,22 +1898,30 @@
     const svgBurnerGroup = document.getElementById('svgBurnerGroup');
     svgBurnerGroup.addEventListener('pointerdown', (e) => {
       if (!simState.burnerLit) setBurnerFlame(true);
-      beginDrag(e, 'burner', svgBurnerGroup, 22, 102);
+      beginDrag(e, 'burner', svgBurnerGroup, 22, 102, 1.0);
     });
 
     const svgPipetteGroup = document.getElementById('svgPipetteGroup');
     svgPipetteGroup.addEventListener('pointerdown', (e) => {
-      beginDrag(e, 'pipette', svgPipetteGroup, 205, 42);
+      beginDrag(e, 'pipette', svgPipetteGroup, 205, 42, 1.0);
     });
 
     const svgFlaskGroup = document.getElementById('svgFlaskGroup');
     svgFlaskGroup.addEventListener('pointerdown', (e) => {
-      beginDrag(e, 'flask', svgFlaskGroup, 105, 62);
+      if (simState.incubating) {
+        // Khi bình đã nằm trong tủ ấm lắc, nhắc học sinh dùng Pipet để hút mẫu từ bình chuyển sang Cuvette!
+        document.getElementById('labInstructionText').innerHTML =
+          '💡 <strong>Bình đang ủ trong tủ ấm lắc!</strong> Ở Bước 4, hãy <strong>kéo Micropipet đưa vào Bình tam giác trong tủ ấm</strong> để hút mẫu rồi chuyển sang Cuvette!';
+        playTone(480, 0.1, 'sine');
+        return;
+      }
+      const home = getFlaskHomePosition();
+      beginDrag(e, 'flask', svgFlaskGroup, home.x, home.y, home.scale);
     });
 
     const svgCuvetteSample = document.getElementById('svgCuvetteSample');
     svgCuvetteSample.addEventListener('pointerdown', (e) => {
-      beginDrag(e, 'cuvette', svgCuvetteSample, 382, 16);
+      beginDrag(e, 'cuvette', svgCuvetteSample, 382, 16, 1.0);
     });
 
     window.addEventListener('pointermove', (e) => {
@@ -1911,8 +1933,14 @@
 
       dragSession.curX = dragSession.homeX + dx;
       dragSession.curY = dragSession.homeY + dy;
-      dragSession.el.setAttribute('transform', `translate(${dragSession.curX.toFixed(1)}, ${dragSession.curY.toFixed(1)})`);
 
+      if (dragSession.type === 'flask') {
+        applyFlaskTransform(dragSession.curX, dragSession.curY, dragSession.scale, 0);
+      } else {
+        dragSession.el.setAttribute('transform', `translate(${dragSession.curX.toFixed(1)}, ${dragSession.curY.toFixed(1)})`);
+      }
+
+      // Hiệu ứng khi kéo Đèn cồn hơ miệng bình ở Bước 1
       if (dragSession.type === 'burner') {
         const flameX = dragSession.curX + 27;
         const flameY = dragSession.curY - 12;
@@ -1929,6 +1957,26 @@
           document.getElementById('svgNeckHeatGlow').setAttribute('opacity', '0');
         }
       }
+
+      // Hiệu ứng tự động hút mẫu khi kéo đầu Pipet chạm vào Bình tam giác đang ở trong Tủ ấm lắc (Bước 4A)
+      if (dragSession.type === 'pipette' && simState.incubating && !simState.pipetteHasSample && !simState.cuvetteFilled) {
+        const tipX = dragSession.curX + 23;
+        const tipY = dragSession.curY + 80;
+        const distToIncubatorFlask = Math.hypot(tipX - 325, tipY - 92);
+        if (distToIncubatorFlask < 52) {
+          simState.pipetteHasSample = true;
+          playTone(760, 0.1, 'sine');
+          document.getElementById('svgPipetteLiquidInside').setAttribute('opacity', '0.9');
+          document.getElementById('svgPipetteDrop').setAttribute('fill', '#eab308');
+          document.getElementById('svgPipetteDrop').setAttribute('opacity', '1');
+          document.getElementById('lblPipetteAction').textContent = '✋ Kéo sang Cuvette!';
+          document.getElementById('lblPipetteAction').setAttribute('fill', '#fde047');
+          document.getElementById('statusStep4').textContent = '⏳ Bơm vào Cuvette';
+          document.getElementById('labInstructionText').innerHTML =
+            '👉 <strong>Đã hút mẫu từ bình trong tủ ấm!</strong> Hãy tiếp tục <strong>kéo Micropipet sang thả vào ống Cuvette</strong> (ô viền tím)!';
+          updateStepCardsAndDropZones();
+        }
+      }
     });
 
     function finishDrag() {
@@ -1936,10 +1984,10 @@
       const s = dragSession;
       dragSession = null;
 
-      s.el.setAttribute('transform', `translate(${s.homeX}, ${s.homeY})`);
       document.getElementById('svgNeckHeatGlow').setAttribute('opacity', '0');
 
       if (s.type === 'burner') {
+        s.el.setAttribute('transform', `translate(${s.homeX}, ${s.homeY})`);
         const flameX = s.curX + 27;
         const flameY = s.curY - 12;
         const dist = Math.hypot(flameX - 145, flameY - 74);
@@ -1947,51 +1995,65 @@
           completeStep1SterilizeNeck();
         }
       } else if (s.type === 'pipette') {
+        s.el.setAttribute('transform', `translate(${s.homeX}, ${s.homeY})`);
         const tipX = s.curX + 23;
         const tipY = s.curY + 80;
-        const dist = Math.hypot(tipX - 145, tipY - 74);
-        if (dist < 75) {
-          if (!simState.capOpened) {
+        const distToBenchFlask = Math.hypot(tipX - 145, tipY - 74);
+        const distToIncubatorFlask = Math.hypot(tipX - 325, tipY - 92);
+        const distToCuvette = Math.hypot(tipX - 393, tipY - 34);
+
+        if (!simState.inoculated) {
+          // Bước 2: Kéo Pipet có giống vào miệng bình trên bàn
+          if (distToBenchFlask < 75) {
+            if (!simState.capOpened) {
+              document.getElementById('labInstructionText').innerHTML =
+                '⚠️ <strong>Chưa thực hiện Bước 1!</strong> Hãy kéo <strong>lửa Đèn cồn hơ miệng bình tam giác</strong> trước!';
+              playTone(280, 0.15, 'sawtooth');
+            } else {
+              completeStep2Pipette();
+            }
+          }
+        } else if (simState.incubating) {
+          // Bước 4: Đang ủ trong tủ ấm -> Dùng Pipet hút từ bình trong tủ ấm chuyển sang Cuvette
+          if (simState.pipetteHasSample && distToCuvette < 78) {
+            completeStep4BDispenseIntoCuvette();
+          } else if (!simState.pipetteHasSample && distToIncubatorFlask < 75) {
+            completeStep4AAspirateFromIncubatorFlask();
+          } else if (!simState.pipetteHasSample && distToCuvette < 78) {
             document.getElementById('labInstructionText').innerHTML =
-              '⚠️ <strong>Chưa mở nắp bình!</strong> Hãy kéo <strong>Đèn cồn Bunsen</strong> hơ vào miệng bình tam giác để mở nắp vô trùng trước khi cấy Pipet!';
+              '⚠️ <strong>Pipet chưa có dịch mẫu!</strong> Hãy kéo <strong>Micropipet vào Bình tam giác trên Tủ ấm lắc</strong> để hút mẫu trước khi bơm vào Cuvette!';
             playTone(280, 0.15, 'sawtooth');
-          } else {
-            completeStep2Pipette();
           }
         }
       } else if (s.type === 'flask') {
-        const flaskCenterX = s.curX + 40;
-        const flaskCenterY = s.curY + 60;
+        const flaskCenterX = s.curX + 40 * s.scale;
+        const flaskCenterY = s.curY + 55 * s.scale;
         const distToIncubator = Math.hypot(flaskCenterX - 325, flaskCenterY - 100);
-        const distToCuvette = Math.hypot(flaskCenterX - 393, flaskCenterY - 32);
 
-        // Nếu học sinh kéo Bình tam giác đến gần ống Cuvette (Bước 4: Rót mẫu từ bình vào Cuvette)
-        if (distToCuvette < 88) {
-          if (!simState.incubating) {
-            document.getElementById('labInstructionText').innerHTML =
-              '⚠️ <strong>Chưa ủ ấm bình nuôi cấy!</strong> Hãy hoàn thành Bước 1, 2 và kéo Bình tam giác vào <strong>Tủ ấm lắc 37°C</strong> (Bước 3) trước khi rót mẫu vào Cuvette!';
-            playTone(280, 0.15, 'sawtooth');
-          } else {
-            completeStep4PourFlaskIntoCuvette();
-          }
-        } else if (distToIncubator < 85) {
-          // Bước 3: Kéo Bình tam giác vào Tủ ấm 37°C
+        if (!simState.incubating && distToIncubator < 88) {
+          // Bước 3: Kéo Bình đặt vào trong Tủ ấm lắc
           if (!simState.inoculated) {
+            const home = getFlaskHomePosition();
+            applyFlaskTransform(home.x, home.y, home.scale, 0);
             document.getElementById('labInstructionText').innerHTML =
-              '⚠️ <strong>Chưa cấy giống vi khuẩn!</strong> Hãy hoàn thành Bước 1 (hơ đèn mở nắp) và Bước 2 (kéo Pipet cấy giống) trước khi đưa bình vào Tủ ấm!';
+              '⚠️ <strong>Chưa thực hiện Bước 2!</strong> Hãy hoàn thành Bước 1 và Bước 2 trước khi đặt bình vào Tủ ấm lắc!';
             playTone(280, 0.15, 'sawtooth');
           } else {
             completeStep3Incubate();
           }
+        } else {
+          const home = getFlaskHomePosition();
+          applyFlaskTransform(home.x, home.y, home.scale, 0);
         }
       } else if (s.type === 'cuvette') {
+        s.el.setAttribute('transform', `translate(${s.homeX}, ${s.homeY})`);
         const cuvCenterX = s.curX + 11;
         const cuvCenterY = s.curY + 16;
         const dist = Math.hypot(cuvCenterX - 426, cuvCenterY - 78);
         if (dist < 75) {
           if (!simState.cuvetteFilled) {
             document.getElementById('labInstructionText').innerHTML =
-              '⚠️ <strong>Ống Cuvette đang rỗng!</strong> Hãy thực hiện <strong>Bước 4: Kéo Bình tam giác đến rót dịch nuôi vào ống Cuvette</strong> trước khi đưa Cuvette vào máy đo OD!';
+              '⚠️ <strong>Ống Cuvette đang rỗng!</strong> Ở Bước 4, hãy <strong>kéo Micropipet hút mẫu từ bình tam giác trên tủ ấm lắc chuyển vào Cuvette</strong> trước!';
             playTone(280, 0.15, 'sawtooth');
           } else {
             completeStep5MeasureOD();
@@ -2119,6 +2181,7 @@
       simState.capOpened = false;
       simState.inoculated = false;
       simState.incubating = false;
+      simState.pipetteHasSample = false;
       simState.cuvetteFilled = false;
       simState.timeHours = 0.0;
       simState.autoPlaying = false;
@@ -2133,6 +2196,17 @@
       document.getElementById('lblCurrentOD').textContent = '0.080';
       document.getElementById('svgOdDisplay').textContent = '0.080';
 
+      const home = getFlaskHomePosition();
+      applyFlaskTransform(home.x, home.y, home.scale, 0);
+      document.getElementById('lblFlaskAction').textContent = 'Bình tam giác';
+      document.getElementById('lblFlaskAction').setAttribute('fill', '#e2e8f0');
+
+      document.getElementById('svgPipetteLiquidInside').setAttribute('opacity', '0');
+      document.getElementById('svgPipetteDrop').setAttribute('fill', '#22d3ee');
+      document.getElementById('svgPipetteDrop').setAttribute('opacity', '0.85');
+      document.getElementById('lblPipetteAction').textContent = '✋ Kéo Pipet';
+      document.getElementById('lblPipetteAction').setAttribute('fill', '#38bdf8');
+
       document.getElementById('svgCuvetteLiquid').setAttribute('opacity', '0');
       document.getElementById('lblCuvetteHint').textContent = 'Cuvette (Rỗng)';
       document.getElementById('lblCuvetteHint').setAttribute('fill', '#cbd5e1');
@@ -2145,32 +2219,31 @@
 
       document.getElementById('svgFlaskCap').setAttribute('transform', 'translate(0, 0)');
       document.getElementById('svgIncubatorWindow').setAttribute('fill', '#0f172a');
-      document.getElementById('svgMiniFlaskInside').setAttribute('opacity', '0');
       document.getElementById('svgIncubatorLed').setAttribute('fill', '#64748b');
       document.getElementById('svgIncubatorTemp').textContent = 'STANDBY';
       document.getElementById('lblTemp').textContent = '25.0°C (Tắt)';
       document.getElementById('lblTemp').className = 'text-slate-300';
 
-      document.getElementById('statusStep1').textContent = '⏳ Chờ kéo đèn...';
-      document.getElementById('statusStep1').className = 'text-[9.5px] text-amber-300 font-semibold mt-1';
-      document.getElementById('statusStep2').textContent = '🔒 Chưa mở nắp';
-      document.getElementById('statusStep2').className = 'text-[9.5px] text-slate-400 mt-1';
-      document.getElementById('statusStep3').textContent = '🔒 Chưa cấy';
-      document.getElementById('statusStep3').className = 'text-[9.5px] text-slate-400 mt-1';
+      document.getElementById('statusStep1').textContent = '⏳ Đang chờ...';
+      document.getElementById('statusStep1').className = 'text-[9px] text-amber-300 font-semibold mt-1';
+      document.getElementById('statusStep2').textContent = '🔒 Chưa thực hiện';
+      document.getElementById('statusStep2').className = 'text-[9px] text-slate-400 mt-1';
+      document.getElementById('statusStep3').textContent = '🔒 Chưa thực hiện';
+      document.getElementById('statusStep3').className = 'text-[9px] text-slate-400 mt-1';
       document.getElementById('statusStep4').textContent = '🔒 Cuvette rỗng';
-      document.getElementById('statusStep4').className = 'text-[9.5px] text-slate-400 mt-1';
+      document.getElementById('statusStep4').className = 'text-[9px] text-slate-400 mt-1';
       document.getElementById('statusStep5').textContent = 'Đã đo: 1 mẫu';
-      document.getElementById('statusStep5').className = 'text-[9.5px] text-slate-400 mt-1';
+      document.getElementById('statusStep5').className = 'text-[9px] text-slate-400 mt-1';
 
       document.getElementById('labStatusBadge').textContent = 'Bước 1 / 5';
       document.getElementById('labInstructionText').innerHTML =
-        '👉 <strong>Bước 1 (Vô trùng):</strong> Hãy click vào <strong>Đèn cồn Bunsen</strong> để bật lửa, sau đó <strong>nhấn giữ chuột kéo Đèn cồn</strong> đưa ngọn lửa đến <strong>hơ vào Miệng bình tam giác</strong> để mở nắp!';
+        '👉 <strong>Bước 1:</strong> Click vào <strong>Đèn cồn Bunsen</strong> để bật lửa, sau đó <strong>nhấn giữ chuột kéo lửa hơ miệng bình tam giác</strong>.';
 
       syncUIAndSimulation();
     });
 
     // ================================================================================
-    // 8. MÃ NGUỒN NGUYÊN MẪU ĐỘC LẬP (ĐÃ XÓA CÁC CHÚ THÍCH LỘ ĐÁP ÁN SINH HỌC)
+    // 8. MÃ NGUỒN NGUYÊN MẪU ĐỘC LẬP
     // ================================================================================
     const standalonePrototypeCode = `<!DOCTYPE html>
 <html lang="vi">
@@ -2178,18 +2251,17 @@
   <meta charset="UTF-8">
   <title>Scene 2: Mô Phỏng 3D Vi Khuẩn & Bảng Điều Khiển Môi Trường</title>
   <style>
-    body { margin: 0; overflow: hidden; background: #060d1a; font-family: sans-serif; color: white; }
+    body { margin: 0; background: #060d1a; font-family: sans-serif; color: white; display: flex; flex-direction: column; height: 100vh; }
+    #viewport { flex: 1; position: relative; overflow: hidden; }
     #controlPanel {
-      position: absolute; top: 16px; right: 16px; width: 260px;
-      background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(8px);
-      padding: 16px; border-radius: 14px; border: 1px solid #38bdf8;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 10;
+      background: #0f172a; border-top: 1px solid #38bdf8;
+      padding: 14px 20px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between;
     }
-    .control-group { margin-bottom: 14px; }
-    .control-group label { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+    .control-group { flex: 1; min-width: 180px; }
+    .control-group label { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 6px; }
     input[type="range"] { width: 100%; cursor: pointer; accent-color: #06b6d4; }
     #btnUV {
-      width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #a855f7;
+      padding: 10px 18px; border-radius: 8px; border: 1px solid #a855f7;
       background: #1e293b; color: #e9d5ff; font-weight: bold; cursor: pointer;
     }
     #btnUV.active { background: #9333ea; color: white; box-shadow: 0 0 15px #c026d3; }
@@ -2198,9 +2270,9 @@
 </head>
 <body>
 
-  <div id="controlPanel">
-    <h3 style="margin: 0 0 10px 0; font-size: 15px; color: #38bdf8;">Biến Số Môi Trường</h3>
+  <div id="viewport"></div>
 
+  <div id="controlPanel">
     <div class="control-group">
       <label>
         <span>🌡️ Nhiệt độ:</span>
@@ -2217,11 +2289,10 @@
       <input id="phSlider" type="range" min="1" max="14" step="0.5" value="7">
     </div>
 
-    <button id="btnUV" onclick="toggleUV()">☢️ Bức xạ tia UV: TẮT</button>
+    <button id="btnUV" onclick="toggleUV()">☢️ Tia UV: TẮT</button>
   </div>
 
   <script>
-    // Bảng thông số kỹ thuật (Thầy/Cô có thể đổi số hoặc mã màu Hex sau chữ 0x):
     const CONFIG = {
       TEMP_LOW: 15,
       TEMP_OPT_MIN: 20,
@@ -2237,14 +2308,15 @@
       BG_UV: 0x4c1d95
     };
 
+    const vp = document.getElementById('viewport');
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(CONFIG.BG_DEFAULT);
-    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+    const camera = new THREE.PerspectiveCamera(50, vp.clientWidth / vp.clientHeight, 0.1, 100);
     camera.position.z = 16;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+    renderer.setSize(vp.clientWidth, vp.clientHeight);
+    vp.appendChild(renderer.domElement);
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.7));
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
@@ -2284,7 +2356,7 @@
       uvTimer = 0;
       const btn = document.getElementById('btnUV');
       btn.className = uvEnabled ? 'active' : '';
-      btn.innerText = uvEnabled ? '☢️ Bức xạ tia UV: BẬT' : '☢️ Bức xạ tia UV: TẮT';
+      btn.innerText = uvEnabled ? '☢️ Tia UV: BẬT' : '☢️ Tia UV: TẮT';
     }
 
     function checkEnvironmentalFactors(timeSec) {
@@ -2398,7 +2470,10 @@
       if (simState.incubating) {
         const shakeX = Math.sin(timeSec * 25) * 1.8;
         document.getElementById('svgShakerTray').setAttribute('transform', `translate(${shakeX.toFixed(1)}, 0)`);
-        document.getElementById('svgMiniFlaskInside').setAttribute('transform', `translate(${(43 + shakeX).toFixed(1)}, 42)`);
+        if (!dragSession || dragSession.type !== 'flask') {
+          const home = getFlaskHomePosition();
+          applyFlaskTransform(home.x, home.y, home.scale, shakeX);
+        }
       }
 
       if (simState.autoPlaying) {
