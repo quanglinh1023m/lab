@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 
 const saveHandler = require("../api/save");
 const viewHandler = require("../api/view");
+const pagesHandler = require("../api/pages");
 
 const TEST_ADMIN_SECRET = "test-admin-secret-999";
 
@@ -46,6 +47,15 @@ function createMockSupabase(initialRows = [], options = {}) {
       return {
         select() {
           return {
+            async order() {
+              if (options.selectError) {
+                return { data: null, error: { message: options.selectError } };
+              }
+              return {
+                data: Array.from(store.values()).map((row) => ({ ...row })),
+                error: null,
+              };
+            },
             eq(col, val) {
               assert.equal(col, "slug");
               return {
@@ -55,6 +65,30 @@ function createMockSupabase(initialRows = [], options = {}) {
                   }
                   const row = store.get(val) || null;
                   return { data: row ? { ...row } : null, error: null };
+                },
+              };
+            },
+          };
+        },
+        delete() {
+          return {
+            eq(col, val) {
+              assert.equal(col, "slug");
+              return {
+                select() {
+                  return {
+                    async maybeSingle() {
+                      if (options.deleteError) {
+                        return { data: null, error: { message: options.deleteError } };
+                      }
+                      const existing = store.get(val);
+                      if (!existing) {
+                        return { data: null, error: null };
+                      }
+                      store.delete(val);
+                      return { data: { slug: val }, error: null };
+                    },
+                  };
                 },
               };
             },
@@ -413,6 +447,39 @@ describe("api/save handler", () => {
 
     assert.equal(res.statusCode, 500);
   });
+
+  it("allows admin to create without PIN and edit with admin_override without PIN", async () => {
+    const mockDb = createMockSupabase();
+    const handler = saveHandler.createSaveHandler({
+      getSupabaseClient: () => mockDb,
+      getAdminSecret: () => TEST_ADMIN_SECRET,
+    });
+
+    const createRes = createMockRes();
+    await handler(
+      { method: "POST", body: { admin_secret: TEST_ADMIN_SECRET, slug: "no-pin-page", html_content: "<h1>V1</h1>" } },
+      createRes
+    );
+    assert.equal(createRes.statusCode, 201);
+    assert.ok(mockDb.store.get("no-pin-page").edit_pin.includes(":"));
+
+    const editRes = createMockRes();
+    await handler(
+      {
+        method: "POST",
+        body: {
+          admin_secret: TEST_ADMIN_SECRET,
+          mode: "edit",
+          admin_override: true,
+          slug: "no-pin-page",
+          html_content: "<h1>V2</h1>",
+        },
+      },
+      editRes
+    );
+    assert.equal(editRes.statusCode, 200);
+    assert.equal(mockDb.store.get("no-pin-page").html_content, "<h1>V2</h1>");
+  });
 });
 
 describe("api/view handler", () => {
@@ -472,5 +539,60 @@ describe("api/view handler", () => {
 
     await handler({ method: "GET", query: { slug: "any-slug" } }, res);
     assert.equal(res.statusCode, 500);
+  });
+});
+
+describe("api/pages admin handler", () => {
+  it("rejects unsupported methods with 405 and wrong/missing admin secret with 401/500", async () => {
+    const noSecretHandler = pagesHandler.createPagesHandler({
+      getSupabaseClient: () => createMockSupabase(),
+      getAdminSecret: () => "",
+    });
+    const noSecretRes = createMockRes();
+    await noSecretHandler({ method: "GET", headers: { "x-admin-secret": "11111" } }, noSecretRes);
+    assert.equal(noSecretRes.statusCode, 500);
+
+    const handler = pagesHandler.createPagesHandler({
+      getSupabaseClient: () => createMockSupabase(),
+      getAdminSecret: () => TEST_ADMIN_SECRET,
+    });
+
+    const postRes = createMockRes();
+    await handler({ method: "POST", headers: { "x-admin-secret": TEST_ADMIN_SECRET } }, postRes);
+    assert.equal(postRes.statusCode, 405);
+
+    const unauthRes = createMockRes();
+    await handler({ method: "GET", headers: { "x-admin-secret": "wrong" } }, unauthRes);
+    assert.equal(unauthRes.statusCode, 401);
+  });
+
+  it("lists pages on GET and deletes page on DELETE", async () => {
+    const mockDb = createMockSupabase([
+      { slug: "page-a", html_content: "<h1>A</h1>", edit_pin: "hash", created_at: "2026-01-01T00:00:00Z", updated_at: "2026-01-01T00:00:00Z" },
+      { slug: "page-b", html_content: "<h1>B</h1>", edit_pin: "hash", created_at: "2026-01-02T00:00:00Z", updated_at: "2026-01-02T00:00:00Z" },
+    ]);
+    const handler = pagesHandler.createPagesHandler({
+      getSupabaseClient: () => mockDb,
+      getAdminSecret: () => TEST_ADMIN_SECRET,
+    });
+
+    const listRes = createMockRes();
+    await handler({ method: "GET", headers: { "x-admin-secret": TEST_ADMIN_SECRET } }, listRes);
+    assert.equal(listRes.statusCode, 200);
+    assert.equal(listRes.body.pages.length, 2);
+
+    const badDeleteRes = createMockRes();
+    await handler({ method: "DELETE", headers: { "x-admin-secret": TEST_ADMIN_SECRET }, query: { slug: "api" } }, badDeleteRes);
+    assert.equal(badDeleteRes.statusCode, 400);
+
+    const missingDeleteRes = createMockRes();
+    await handler({ method: "DELETE", headers: { "x-admin-secret": TEST_ADMIN_SECRET }, query: { slug: "not-found" } }, missingDeleteRes);
+    assert.equal(missingDeleteRes.statusCode, 404);
+
+    const deleteRes = createMockRes();
+    await handler({ method: "DELETE", headers: { "x-admin-secret": TEST_ADMIN_SECRET }, query: { slug: "page-a" } }, deleteRes);
+    assert.equal(deleteRes.statusCode, 200);
+    assert.deepEqual(deleteRes.body, { deleted: true, slug: "page-a" });
+    assert.equal(mockDb.store.has("page-a"), false);
   });
 });

@@ -94,6 +94,7 @@ function createSaveHandler(deps = {}) {
       }
 
       const mode = body.mode === "edit" ? "edit" : "create";
+      const adminOverride = body.admin_override === true;
       const rawSlug = typeof body.slug === "string" ? body.slug.trim().toLowerCase() : "";
       const htmlContent = typeof body.html_content === "string" ? body.html_content : "";
       const editPin = typeof body.edit_pin === "string" ? body.edit_pin.trim() : "";
@@ -104,7 +105,10 @@ function createSaveHandler(deps = {}) {
       if (Buffer.byteLength(htmlContent, "utf8") > MAX_HTML_BYTES) {
         return res.status(413).json({ error: "Nội dung HTML vượt quá giới hạn 2 MB." });
       }
-      if (!PIN_REGEX.test(editPin)) {
+      if (editPin && !PIN_REGEX.test(editPin)) {
+        return res.status(400).json({ error: "Mã PIN phải gồm 4 đến 6 chữ số." });
+      }
+      if (mode === "edit" && !adminOverride && !editPin) {
         return res.status(400).json({ error: "Mã PIN phải gồm 4 đến 6 chữ số." });
       }
 
@@ -132,45 +136,52 @@ function createSaveHandler(deps = {}) {
           return res.status(404).json({ error: "Không tìm thấy trang cần cập nhật." });
         }
 
-        const now = nowFn();
-        const lockedUntilMs = existing.locked_until ? Date.parse(existing.locked_until) : 0;
-        if (lockedUntilMs > now) {
-          const waitMinutes = Math.ceil((lockedUntilMs - now) / 60000);
-          return res.status(429).json({
-            error: `Nhập sai PIN quá nhiều lần. Vui lòng thử lại sau ${waitMinutes} phút.`,
-          });
-        }
-
-        if (!verifyPin(editPin, existing.edit_pin)) {
-          const nextAttempts = (Number(existing.failed_attempts) || 0) + 1;
-          const isLocked = nextAttempts >= MAX_PIN_ATTEMPTS;
-          const lockPatch = isLocked
-            ? { failed_attempts: nextAttempts, locked_until: new Date(now + LOCKOUT_MS).toISOString() }
-            : { failed_attempts: nextAttempts };
-
-          const { error: lockUpdateError } = await supabase
-            .from("pages")
-            .update(lockPatch)
-            .eq("slug", slug);
-
-          if (lockUpdateError) {
-            console.error(JSON.stringify({ event: "save_lock_update_error", slug, message: lockUpdateError.message }));
-          }
-
-          if (isLocked) {
+        if (!adminOverride) {
+          const now = nowFn();
+          const lockedUntilMs = existing.locked_until ? Date.parse(existing.locked_until) : 0;
+          if (lockedUntilMs > now) {
+            const waitMinutes = Math.ceil((lockedUntilMs - now) / 60000);
             return res.status(429).json({
-              error: "Nhập sai PIN 5 lần liên tiếp. Đã tạm khóa sửa trang trong 15 phút.",
+              error: `Nhập sai PIN quá nhiều lần. Vui lòng thử lại sau ${waitMinutes} phút.`,
             });
           }
 
-          return res.status(403).json({
-            error: `Mã PIN không chính xác. Còn ${MAX_PIN_ATTEMPTS - nextAttempts} lần thử.`,
-          });
+          if (!verifyPin(editPin, existing.edit_pin)) {
+            const nextAttempts = (Number(existing.failed_attempts) || 0) + 1;
+            const isLocked = nextAttempts >= MAX_PIN_ATTEMPTS;
+            const lockPatch = isLocked
+              ? { failed_attempts: nextAttempts, locked_until: new Date(now + LOCKOUT_MS).toISOString() }
+              : { failed_attempts: nextAttempts };
+
+            const { error: lockUpdateError } = await supabase
+              .from("pages")
+              .update(lockPatch)
+              .eq("slug", slug);
+
+            if (lockUpdateError) {
+              console.error(JSON.stringify({ event: "save_lock_update_error", slug, message: lockUpdateError.message }));
+            }
+
+            if (isLocked) {
+              return res.status(429).json({
+                error: "Nhập sai PIN 5 lần liên tiếp. Đã tạm khóa sửa trang trong 15 phút.",
+              });
+            }
+
+            return res.status(403).json({
+              error: `Mã PIN không chính xác. Còn ${MAX_PIN_ATTEMPTS - nextAttempts} lần thử.`,
+            });
+          }
+        }
+
+        const updatePayload = { html_content: htmlContent, failed_attempts: 0, locked_until: null };
+        if (adminOverride && editPin) {
+          updatePayload.edit_pin = hashPin(editPin);
         }
 
         const { error: updateError } = await supabase
           .from("pages")
-          .update({ html_content: htmlContent, failed_attempts: 0, locked_until: null })
+          .update(updatePayload)
           .eq("slug", slug);
 
         if (updateError) {
@@ -197,10 +208,11 @@ function createSaveHandler(deps = {}) {
         });
       }
 
+      const effectivePin = editPin || String(crypto.randomInt(100000, 1000000));
       const { error: insertError } = await supabase.from("pages").insert({
         slug,
         html_content: htmlContent,
-        edit_pin: hashPin(editPin),
+        edit_pin: hashPin(effectivePin),
       });
 
       if (insertError) {
@@ -223,6 +235,7 @@ function createSaveHandler(deps = {}) {
 
 const handler = createSaveHandler();
 handler.createSaveHandler = createSaveHandler;
+handler.getSupabaseClient = getSupabaseClient;
 handler.hashPin = hashPin;
 handler.verifyPin = verifyPin;
 handler.verifyAdminSecret = verifyAdminSecret;
@@ -230,6 +243,7 @@ handler.MAX_HTML_BYTES = MAX_HTML_BYTES;
 handler.MAX_PIN_ATTEMPTS = MAX_PIN_ATTEMPTS;
 handler.SLUG_REGEX = SLUG_REGEX;
 handler.PIN_REGEX = PIN_REGEX;
+handler.RESERVED_SLUGS = RESERVED_SLUGS;
 
 module.exports = handler;
 
